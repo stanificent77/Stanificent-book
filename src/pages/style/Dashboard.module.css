@@ -1,0 +1,122 @@
+.sale{
+    border: 0px solid black;
+    width: 32%;
+    background: white;
+    text-align: center;
+    border-radius: 5px;
+    box-shadow: 1px 1px 3px grey;
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    justify-content: space-around;
+}
+
+.icon{
+    font-size: 40px;
+    width: 20%;
+}
+
+.content{
+    --background: rgb(237, 237, 237);
+}
+
+.firstBlock{
+    width: 90%;
+    margin: auto;
+    border: 0px solid black;
+    box-shadow: 0px 0.3px 2px rgba(123, 122, 122, 0.45);
+    margin-top: 2rem;
+    padding: 10px;
+    border-radius: 9px;
+    background: white; 
+}
+
+.userName{
+    font-size: 20px;
+    border: 0px solid black;
+}
+
+.write{
+    font-size: 20px;
+    border: 0px solid black;
+    margin-top: 5px;
+    color: grey;
+    padding-left: 3px;
+}
+
+.firstContent{
+    border: 0px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; 
+    width: 100%;
+}
+
+.tag{
+    display: flex; 
+    justify-content: space-between;
+    align-items: center;
+    width: 18%;
+}
+
+.but{
+    width: 30%;
+}
+
+.contentBut{
+    border: 0px solid black;
+    width: 90%;
+    margin: auto;
+    margin-top: 2rem;
+    display: flex;
+    justify-content: space-around;
+}
+
+.fig{
+    font-weight: 600;
+    font-size: 25px;
+}
+
+@media (max-width: 670px){
+    .firstContent{
+        flex-direction: column;
+    }
+
+
+
+    .but{
+        width: 90%;
+        margin: auto;
+        margin-top: 9px;
+    }
+
+    .contentBut{
+        border: 0px solid black;
+        width: 90%;
+        margin: auto;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+
+    .tag{
+        display: flex; 
+        justify-content: space-around;
+        align-items: center;
+        width: 60%;
+        margin-top: 1rem;
+    }
+
+    .sale{
+        flex-direction: column;
+        padding: 6px;
+        align-items: center;
+        text-align: center;
+    }
+
+    .icon{
+        width: 50%;
+        border: 0px solid black;
+        margin: auto;
+        font-size: 35px;
+    }
+}

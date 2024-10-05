@@ -1,0 +1,112 @@
+.cust{
+    border:0px solid blue;
+    width: 100%;
+}
+
+.car{
+    margin-top: 3rem;
+}
+
+
+input:focus{
+    box-shadow: 0px 0.3px 2px rgba(123, 122, 122, 0.45);
+}
+
+.input{
+    font-size: 17px;
+    padding: 30px;
+}
+
+.track{
+    margin-top: 3rem;
+}
+
+.save:hover{
+    background: #2c2854;
+}
+
+.save{
+    transition: 0.5 ease-in-out;
+}
+
+
+.flex{
+    display: flex;
+    border: 0px solid black;
+    width: 90%;
+    justify-content: space-around;
+    align-items: center; 
+    margin: auto;
+}
+
+.inputTitle{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 19%;
+    font-weight: bold;
+    font-size: 20px;
+    border: 0px solid black; 
+    padding: 2px;
+}
+
+.inputbox{
+    display: block;
+    margin-top: 1rem;
+    border: 0px solid black;
+    width: 30%;
+}
+
+
+.butCont{
+    display: flex;
+    border: 0px solid black;
+    text-align: right;
+    margin-top: 1rem;
+    padding-block: .5rem;
+    justify-content: space-between; 
+    margin-left: auto;
+}
+
+.butDiv{
+    width: 10%;
+}
+
+@media (max-width: 620px) {
+    .flex{
+        flex-direction: column;
+    }
+
+    .inputTitle{
+        display: flex;
+        align-items: center;
+        justify-content:left;
+        width: 90%;
+        font-weight: bold;
+        font-size: 20px;
+        border: 0px solid black; 
+        padding: 2px;
+    }
+
+    .inputbox{
+        margin-top: 1rem;
+        border: 0px solid black;
+        width: 90%;
+    }
+
+    .butCont{
+        display: flex;
+        border: 0px solid black;
+        text-align: right;
+        margin-top: 1rem;
+        padding-block: .5rem;
+        justify-content: space-between; 
+        margin-left: auto;
+    }
+
+    
+.butDiv{
+    width: 30%;
+}
+    
+}
