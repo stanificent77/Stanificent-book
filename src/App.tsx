@@ -69,7 +69,7 @@ const App: React.FC = () => (
           <SideNav />
         </Route>
         <Route exact path="/">
-          <Redirect to="/home" />
+          <Redirect to="/login" />
         </Route>
         <Route exact path='/addemployee'>
           <AddEmployee/>
