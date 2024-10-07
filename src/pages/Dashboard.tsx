@@ -5,7 +5,7 @@ import { copySharp, cartSharp, todaySharp, calendarClearSharp } from 'ionicons/i
 import style from "./style/Dashboard.module.css";
 import Header from "../components/Header";
 import Logout from "../components/Logout";
-import useUserInfo from "./hooks/useUserInfo";
+import useUserInfo from "../hooks/useUserInfo";
 
 const Dashboard: React.FC = () => {
     const { userName, employeeTag } = useUserInfo(); 

@@ -3,11 +3,13 @@ import { IonPage, IonContent, IonIcon, IonButton, } from "@ionic/react";
 import { personSharp, lockClosedSharp, addCircleSharp, settingsOutline, copySharp, cartSharp, todaySharp, calendarClearSharp, informationCircleOutline, backspace, arrowBack } from 'ionicons/icons';
 import style from './style/AddEmployee.module.css';
 import Header from "../components/Header";
-import useUserInfo from "./hooks/useUserInfo";
+import useUserInfo from "../hooks/useUserInfo";
+import useOfflineSync  from '../hooks/useOfflineSync';
 
 
 const Customer: React.FC = () => {
 
+    const { saveDataOffline } = useOfflineSync();
 
     const { userName, employeeTag } = useUserInfo();
 
@@ -20,44 +22,60 @@ const Customer: React.FC = () => {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [otherInformation, setOtherInformation] = useState('');
 
+    const customerData = {
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        companyName: companyName,
+        address: address,
+        customerCategory: customerCategory,
+        phoneNumber: phoneNumber,
+        otherInformation: otherInformation
+    }
+
+    const clearFormFields = () => {
+        setFirstName('');
+        setLastName('');
+        setEmail('');
+        setCompanyName('');
+        setAddress('');
+        setCustomerCategory('');
+        setPhoneNumber('');
+        setOtherInformation('');
+    }
+
+    const endpoint = 'http://localhost/pos-endpoint/addcustomer.php';
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
     
-        const response = await fetch('http://localhost/pos-endpoint/addcustomer.php', { // Update with your actual path
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json', // Indicates JSON format
-            },
-            body: JSON.stringify({
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-                companyName: companyName,
-                address: address,
-                customerCategory: customerCategory,
-                phoneNumber: phoneNumber,
-                otherInformation: otherInformation
-            }),
-        });
-    
-        try {
-            const data = await response.json();
-            alert(data.message);
-            
-            setFirstName('');
-            setLastName('');
-            setEmail('');
-            setCompanyName('');
-            setAddress('');
-            setCustomerCategory('');
-            setPhoneNumber('');
-            setOtherInformation('');
-            
-            // Notify the user about the registration status
-        } catch (error) {
-            console.error("Error:", error);
-            alert("An error occurred during registration.");
+
+        if(navigator.onLine){
+            const response = await fetch(endpoint, { // Update with your actual path
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // Indicates JSON format
+                },
+                body: JSON.stringify(customerData),
+            });
+        
+            try {
+                const data = await response.json();
+                alert(data.message);
+                clearFormFields();
+                // Notify the user about the registration status
+            } catch (error) {
+                console.error("Error:", error);
+                alert("An error occurred during registration.");
+                clearFormFields();
+
+            }
+        }else{
+            saveDataOffline(customerData, endpoint);
+            alert(
+              "You are offline. Employee data saved locally and will sync when online."
+            );
+            clearFormFields();
         }
     };
 

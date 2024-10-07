@@ -3,11 +3,14 @@ import { personSharp, lockClosedSharp, settingsOutline, informationCircleOutline
 import Header from "../components/Header";
 import React, { useState } from "react";
 import style from './style/Tracker.module.css';
-import useUserInfo from "./hooks/useUserInfo";
+import useUserInfo from "../hooks/useUserInfo";
+import useOfflineSync from "../hooks/useOfflineSync";
 
 const Tracker: React.FC = () => {
     const { userName, employeeTag } = useUserInfo();
-
+    const endpoint = "http://localhost/pos-endpoint/track.php";
+    const { saveDataOffline } = useOfflineSync();
+    
     const initialFormState = {
         firstName: '',
         lastName: '',
@@ -58,28 +61,37 @@ const Tracker: React.FC = () => {
         // Log form data to check values before submitting
         console.log("Submitting form data:", formData);
 
-        try {
-            const response = await fetch("http://localhost/pos-endpoint/track.php", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(formData)
-            });
+        if(navigator.onLine){
 
-            if (!response.ok) {
-                // Inspect response status for further debugging
-                console.error(`Error submitting form. Status: ${response.status}`);
-                const errorData = await response.text();
-                console.error("Response body:", errorData);
-            } else {
-                const data = await response.json();
-                console.log("Form submitted successfully", data);
-                // Clear form after successful submission
-                clearForm();
+            try {
+                const response = await fetch(endpoint, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (!response.ok) {
+                    // Inspect response status for further debugging
+                    console.error(`Error submitting form. Status: ${response.status}`);
+                    const errorData = await response.text();
+                    console.error("Response body:", errorData);
+                } else {
+                    const data = await response.json();
+                    console.log("Form submitted successfully", data);
+                    // Clear form after successful submission
+                    clearForm();
+                }
+            } catch (error) {
+                console.error("Error submitting form:", error);
             }
-        } catch (error) {
-            console.error("Error submitting form:", error);
+        }else{
+            await saveDataOffline(formData, endpoint);
+            alert(
+              "You are offline. Employee data saved locally and will sync when online."
+            );
+            clearForm();
         }
     };
 

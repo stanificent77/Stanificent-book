@@ -5,7 +5,7 @@ import {
 } from '@ionic/react';
 import { closeCircle } from 'ionicons/icons';
 import Header from '../components/Header';
-import useUserInfo from "./hooks/useUserInfo";
+import useUserInfo from "../hooks/useUserInfo";
 
 const TrackerList: React.FC = () => {
 
@@ -130,7 +130,9 @@ const TrackerList: React.FC = () => {
                     <p><strong>Device Number:</strong> {selectedTracker.DeviceNumber}</p>
                     <p><strong>Email:</strong> {selectedTracker.Email}</p>
                     <p><strong>Phone 1:</strong> {selectedTracker.PhoneNumber}</p>
-                    <p><strong>Phone 2:</strong> {selectedTracker.PhoneNumber2}</p>
+                    <p><strong>Category:</strong> {selectedTracker.Category}</p>
+                    <p><strong>Description:</strong> {selectedTracker.Description}</p>
+                    <p><strong>Other Information:</strong> {selectedTracker.OtherInformation}</p>
                     <p><strong>Occupation:</strong> {selectedTracker.Occupation}</p>
                     <p><strong>Address:</strong> {selectedTracker.Address}</p>
                     <p><strong>Vehicle Name:</strong> {selectedTracker.VehicleName}</p>
@@ -144,11 +146,6 @@ const TrackerList: React.FC = () => {
                     <p><strong>Amount:</strong> {selectedTracker.Amount}</p>
                     <p><strong>Subscription:</strong> {selectedTracker.Subscription}</p>
                     <p><strong>Installation Date:</strong> {selectedTracker.InstallationDate}</p>
-                    <p><strong>Category:</strong> {selectedTracker.Category}</p>
-                    <p><strong>Description:</strong> {selectedTracker.Description}</p>
-                    <p><strong>Other Information:</strong> {selectedTracker.OtherInformation}</p>
-                    <p><strong>Referral Name:</strong> {selectedTracker.RefferalName}</p>
-                    <p><strong>Referral Number:</strong> {selectedTracker.RefferalNumber}</p>
                   </IonCol>
                 </IonRow>
               </IonGrid>

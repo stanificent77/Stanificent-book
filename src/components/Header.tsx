@@ -2,7 +2,7 @@ import { IonPage, IonHeader, IonIcon, IonToolbar, IonButton, IonContent, IonTab 
 import React, {useEffect, useState} from "react";
 import style from './Header.module.css';
 import { personSharp, lockClosedSharp, settingsOutline, menuOutline } from 'ionicons/icons';
-import useUserInfo from "../pages/hooks/useUserInfo";
+import useUserInfo from "../hooks/useUserInfo";
 
 const Header: React.FC = () => {
 

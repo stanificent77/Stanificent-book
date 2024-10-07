@@ -8,13 +8,13 @@ import { addIcons } from "ionicons";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import MaskedInput from 'react-text-mask';
-import useUserInfo from "./hooks/useUserInfo";
-
-
+import useUserInfo from "../hooks/useUserInfo";
+import useOfflineSync  from '../hooks/useOfflineSync';
 
 const AddEmployee: React.FC = () => {
 
     const { userName, employeeTag } = useUserInfo();
+    const { saveDataOffline } = useOfflineSync();
 
 
     const [username, setUsername] = useState('');
@@ -25,45 +25,64 @@ const AddEmployee: React.FC = () => {
     const [email, setEmail] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [role, setRole] = useState("user");
+    const endpoint = 'http://localhost/pos-endpoint/addemployee.php';
+
+    const employeeData = {
+        username: username,
+        email: email,
+        employment_date: employmentDate,
+        position: position,
+        role: role,
+        phoneNumber: phoneNumber,
+        password: password,
+        confirm_password: confirmPassword
+    }
 
 
-    const dateMask = [
-        /\d/, /\d/, '/', // Day part (DD)
-        /\d/, /\d/, '/', // Month part (MM)
-        /\d/, /\d/, /\d/, /\d/ // Year part (YYYY)
-      ];
-
-
-
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-    
-        const response = await fetch('http://localhost/pos-endpoint/addemployee.php', { // Update with your actual path
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json', // Indicates JSON format
-            },
-            body: JSON.stringify({
-                username: username,
-                email: email,
-                employment_date: employmentDate,
-                position: position,
-                role: role,
-                phoneNumber: phoneNumber,
-                password: password,
-                confirm_password: confirmPassword
-            }),
-        });
-    
-        try {
-            const data = await response.json();
-            alert(data.message); // Notify the user about the registration status
-        } catch (error) {
-            console.error("Error:", error);
-            alert("An error occurred during registration.");
-        }
+    const clearFormFields = () => {
+        setUsername('');
+        setEmploymentDate('');
+        setPosition('');
+        setPassword('');
+        setConfirmPassword('');
+        setEmail('');
+        setPhoneNumber('');
+        setRole('user');
     };
 
+
+
+
+      const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+    
+        if (navigator.onLine) {
+          // If online, submit the data to the server
+          try {
+            const response = await fetch(endpoint, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(employeeData),
+            });
+    
+            const data = await response.json();
+            alert(data.message); // Notify the user about the registration status
+          } catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred during registration.");
+          }
+        } else {
+          // Use the sync function when offline
+          saveDataOffline(employeeData, endpoint);
+          alert(
+            "You are offline. Employee data saved locally and will sync when online."
+          );
+          clearFormFields();
+        }
+      };
+    
 
 
 

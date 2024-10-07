@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonSearchbar, IonList, IonItem, IonLabel, IonSkeletonText } from '@ionic/react';
 import Header from '../components/Header';
 import style from './style/CustomerList.module.css';
-import useUserInfo from "./hooks/useUserInfo";
+import useUserInfo from "../hooks/useUserInfo";
 
 const CustomerList: React.FC = () => {
 

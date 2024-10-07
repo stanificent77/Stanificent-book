@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { IonPage, IonContent } from '@ionic/react';
 import Header from '../components/Header';
-import useUserInfo from "./hooks/useUserInfo";
+import useUserInfo from "../hooks/useUserInfo";
 
 const Dash: React.FC = () => {
 
