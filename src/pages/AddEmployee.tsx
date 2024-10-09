@@ -26,7 +26,7 @@ const AddEmployee: React.FC = () => {
     const [email, setEmail] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [role, setRole] = useState("user");
-    const endpoint = 'http://localhost/pos-endpoint/addemployee.php';
+    const endpoint = 'https://stanificentglobal.com/api/addemployee.php';
 
     const employeeData = {
         username: username,

@@ -1,5 +1,5 @@
 {
-  "name": "stanPos",
+  "name": "Stanificent Pos Systen",
   "private": true,
   "version": "0.0.1",
   "type": "module",
@@ -54,5 +54,5 @@
     "vite": "~5.2.0",
     "vitest": "^0.34.6"
   },
-  "description": "An Ionic project"
+  "description": "Point of sales system"
 }

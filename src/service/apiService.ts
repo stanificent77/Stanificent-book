@@ -1,7 +1,7 @@
 // src/services/apiService.ts
 export async function sendToServer(data: any) {
     try {
-      const response = await fetch('http://localhost/pos-endpoint/addemployee.php', {
+      const response = await fetch('https://stanficentglobal.com/api/addemployee.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

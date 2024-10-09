@@ -21,7 +21,7 @@ const EmployeeList: React.FC = () => {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const response = await fetch('http://localhost/pos-endpoint/getEmployees.php');
+        const response = await fetch('https://stanificentglobal.com/api/getEmployees.php');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
