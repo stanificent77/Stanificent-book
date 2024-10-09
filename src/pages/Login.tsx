@@ -97,11 +97,6 @@ const Login: React.FC = () => {
                                     <div>
                                         <button style={{width: "100%", marginTop: "2.5rem", background:"#443d81", padding:"12px", borderRadius:"5px", color:"white"}}>LOGIN</button>
                                     </div>
-                                    <div>
-                                        <a href="/register"  style={{ display: 'block', padding: '10px', color: 'black', textDecoration:"none" }}>
-                                        New User? <span style={{color:"blue"}}>Register</span> 
-                                        </a>
-                                    </div>
                                 </form>
                             </div>
                         </IonCard>
