@@ -7,7 +7,7 @@ import { closeCircle } from 'ionicons/icons';
 import Header from '../components/Header';
 import useUserInfo from "../hooks/useUserInfo";
 
-const TrackerList: React.FC = () => {
+const EmployeeList: React.FC = () => {
 
     const { userName, employeeTag } = useUserInfo();
 
@@ -62,6 +62,9 @@ const TrackerList: React.FC = () => {
     <IonPage>
       <Header />
       <IonContent className="ion-padding">
+        <div>
+            Employees List
+        </div>
         <IonSearchbar
           placeholder="Search by name, phone, device number, or plate"
           value={searchTerm}
@@ -144,4 +147,4 @@ const TrackerList: React.FC = () => {
   );
 };
 
-export default TrackerList;
+export default EmployeeList;
