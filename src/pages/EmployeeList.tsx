@@ -6,6 +6,7 @@ import {
 import { closeCircle } from 'ionicons/icons';
 import Header from '../components/Header';
 import useUserInfo from "../hooks/useUserInfo";
+import BackButton from '../components/BackButton';
 
 const EmployeeList: React.FC = () => {
 
@@ -60,7 +61,7 @@ const EmployeeList: React.FC = () => {
 
   return (
     <IonPage>
-      <Header />
+      <BackButton/>
       <IonContent className="ion-padding">
         <div>
             Employees List

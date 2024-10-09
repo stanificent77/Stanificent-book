@@ -3,9 +3,10 @@ import {
   IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonSearchbar, IonList, IonItem,
   IonLabel, IonSkeletonText, IonModal, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonCard
 } from '@ionic/react';
-import { closeCircle } from 'ionicons/icons';
+import { closeCircle, chevronBack } from 'ionicons/icons';
 import Header from '../components/Header';
 import useUserInfo from "../hooks/useUserInfo";
+import BackButton from '../components/BackButton';
 
 const TrackerList: React.FC = () => {
 
@@ -61,7 +62,7 @@ const TrackerList: React.FC = () => {
 
   return (
     <IonPage>
-      <Header />
+      <BackButton/>
       <IonContent className="ion-padding">
         <IonSearchbar
           placeholder="Search by name, phone, device number, or plate"

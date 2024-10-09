@@ -10,6 +10,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import MaskedInput from 'react-text-mask';
 import useUserInfo from "../hooks/useUserInfo";
 import useOfflineSync  from '../hooks/useOfflineSync';
+import BackButton from "../components/BackButton";
 
 const AddEmployee: React.FC = () => {
 
@@ -90,7 +91,7 @@ const AddEmployee: React.FC = () => {
 
     return(
         <IonPage>
-            <Header/>
+            <BackButton/>
             <IonContent className={style.container}>
                 <div className={style.topic}>
                     <div className={style.employee}>
@@ -98,7 +99,7 @@ const AddEmployee: React.FC = () => {
                         <div className={style.createnew}>Create new employee</div>
                     </div>
                     <div>
-                        <IonButton className={style.employeebut}> <IonIcon icon={arrowBack} /> Employees List</IonButton>
+                        <IonButton className={style.employeebut} routerLink="/employeelist"> <IonIcon icon={arrowBack} /> Employees List</IonButton>
                     </div>
                 </div>
 

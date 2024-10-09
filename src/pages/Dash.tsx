@@ -9,7 +9,6 @@ const Dash: React.FC = () => {
 
     return (
         <IonPage>
-            <Header />
             <IonContent>
                 <h1>Welcome, {userName}</h1>
                 <p>Your role: {userRole}</p>

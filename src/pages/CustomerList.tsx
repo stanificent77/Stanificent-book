@@ -3,6 +3,7 @@ import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonSearchbar, Ion
 import Header from '../components/Header';
 import style from './style/CustomerList.module.css';
 import useUserInfo from "../hooks/useUserInfo";
+import BackButton from '../components/BackButton';
 
 const CustomerList: React.FC = () => {
 
@@ -48,7 +49,7 @@ const CustomerList: React.FC = () => {
 
   return (
     <IonPage>
-      <Header />
+      <BackButton/>
       <IonContent className="ion-padding">
         <div>
             CUSTOMER LIST

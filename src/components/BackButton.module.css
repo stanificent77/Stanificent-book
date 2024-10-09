@@ -1,0 +1,26 @@
+.but{
+   display: none;
+}
+
+.chev{
+    display: none;
+}
+
+
+@media (max-width: 710px) {
+    
+    .but{
+        display:block;
+        border: 0px solid black;
+    }
+
+    .chev{
+        display: block;
+        border: 0px solid black;
+        width: fit-content;
+        padding: .1rem;
+        font-size: 25px;
+        border-radius: 50%;
+        margin: 6px 6px;
+    }
+}

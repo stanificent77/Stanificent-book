@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import style from './style/Tracker.module.css';
 import useUserInfo from "../hooks/useUserInfo";
 import useOfflineSync from "../hooks/useOfflineSync";
+import BackButton from "../components/BackButton";
 
 const Tracker: React.FC = () => {
     const { userName, employeeTag } = useUserInfo();
@@ -97,7 +98,7 @@ const Tracker: React.FC = () => {
 
     return(
         <IonPage>
-            <Header/>
+            <BackButton/>
             <IonContent>
                 <div style={{width: "90%", margin:"auto", display:"flex", justifyContent:"space-between", alignItems:"center"}}>
                     <div style={{marginTop:"1rem"}}>

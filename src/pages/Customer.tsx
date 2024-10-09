@@ -5,6 +5,7 @@ import style from './style/AddEmployee.module.css';
 import Header from "../components/Header";
 import useUserInfo from "../hooks/useUserInfo";
 import useOfflineSync  from '../hooks/useOfflineSync';
+import BackButton from "../components/BackButton";
 
 
 const Customer: React.FC = () => {
@@ -82,7 +83,7 @@ const Customer: React.FC = () => {
 
     return(
         <IonPage>
-        <Header/>
+            <BackButton/>
         <IonContent className={style.container}>
             <div className={style.topic}>
                 <div className={style.employee}>
