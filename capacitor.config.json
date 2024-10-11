@@ -1,0 +1,14 @@
+{
+  "appId": "com.stanificentglobal.app",
+  "appName": "Stanificent POS System",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "plugins": {
+    "SplashScreen": {
+      "showSpinner": false,
+      "splashFullScreen": true,
+      "splashImmersive": true,
+      "splashDelay": 3000
+    }
+  }
+}

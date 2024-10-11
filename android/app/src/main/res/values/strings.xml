@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">stanPos</string>
-    <string name="title_activity_main">stanPos</string>
-    <string name="package_name">io.ionic.starter</string>
-    <string name="custom_url_scheme">io.ionic.starter</string>
+    <string name="app_name">Stanificent POS System</string>
+    <string name="title_activity_main">Stanificent POS System</string>
+    <string name="package_name">com.stanificentglobal.app</string>
+    <string name="custom_url_scheme">com.stanificentglobal.app</string>
 </resources>

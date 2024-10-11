@@ -1,0 +1,18 @@
+.custom-splash-content {
+    height: 100%;
+    border: 0px solid black;
+    background-color: #ffffff; /* You can change the background color */
+  }
+  
+  .splash-gif {
+    margin: auto;
+    border: 0px solid black;  /* Adjust the size of the GIF as needed */
+    height: auto;
+    margin-top: 12rem;
+  }
+
+  .git-cont{
+    margin: auto;
+    border: 0px solid black;
+  }
+  

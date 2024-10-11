@@ -1,3 +1,4 @@
+import React, {useEffect, useState} from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, setupIonicReact, IonSplitPane } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
@@ -43,55 +44,74 @@ import Customer from './pages/Customer';
 import CustomerList from './pages/CustomerList';
 import TrackerList from './pages/TrackerLIst';
 import EmployeeList from './pages/EmployeeList';
+import CustomSplashScreen from './components/CustomSplashScreen';
 
 setupIonicReact();
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet>
-        <Route exact path="/home">
-          <Home />
-        </Route>
-        <Route exact path="/login">
-          <Login />
-        </Route>
-        <Route exact path="/register">
-          <Register />
-        </Route>
-        <Route exact path="/tracker">
-          <Tracker />
-        </Route>
-        <Route exact path="/dashboard">
-          <Dashboard />
-        </Route>
-        <Route exact path="/nav">
-          <SideNav />
-        </Route>
-        <Route exact path="/">
-          <Redirect to="/login" />
-        </Route>
-        <Route exact path='/addemployee'>
-          <AddEmployee/>
-        </Route>
-        <Route exact path='/customer'>
-          <Customer/>
-        </Route>
-        <Route exact path='/trackerlist'>
-          <TrackerList/>
-        </Route>
-        <Route exact path='/employeelist'>
-          <EmployeeList/>
-        </Route>
-        <Route exact path='/customerlist'>
-          <CustomerList/>
-        </Route>
-        <Route exact path='/dash'>
-          <Dash/>
-        </Route>
-      </IonRouterOutlet>
-    </IonReactRouter>
-  </IonApp>
-);
+const App: React.FC = () => {
+  
+  const [isAppReady, setIsAppReady] = useState(false);
+
+  useEffect(() => {
+    // Simulate app initialization, such as loading data or performing setup tasks
+    setTimeout(() => {
+      setIsAppReady(true);
+    }, 3000); // This should match the GIF display duration
+  }, []);
+
+
+
+
+  return(
+    <IonApp>
+      { isAppReady ? (
+        <IonReactRouter>
+          <IonRouterOutlet>
+            <Route exact path="/home">
+              <Home />
+            </Route>
+            <Route exact path="/login">
+              <Login />
+            </Route>
+            <Route exact path="/register">
+              <Register />
+            </Route>
+            <Route exact path="/tracker">
+              <Tracker />
+            </Route>
+            <Route exact path="/dashboard">
+              <Dashboard />
+            </Route>
+            <Route exact path="/nav">
+              <SideNav />
+            </Route>
+            <Route exact path="/">
+              <Redirect to="/login" />
+            </Route>
+            <Route exact path='/addemployee'>
+              <AddEmployee/>
+            </Route>
+            <Route exact path='/customer'>
+              <Customer/>
+            </Route>
+            <Route exact path='/trackerlist'>
+              <TrackerList/>
+            </Route>
+            <Route exact path='/employeelist'>
+              <EmployeeList/>
+            </Route>
+            <Route exact path='/customerlist'>
+              <CustomerList/>
+            </Route>
+            <Route exact path='/dash'>
+              <Dash/>
+            </Route>
+          </IonRouterOutlet>
+        </IonReactRouter> ) : (
+          <CustomSplashScreen/>
+        )}
+    </IonApp>
+  );
+};
 
 export default App;
