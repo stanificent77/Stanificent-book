@@ -10,7 +10,7 @@ const Header: React.FC = () => {
     const { userName, employeeTag, userRole } = useUserInfo(); 
 
 
-    const logo = 'StanLogo.png';
+    const logo = '../resources/StanLogo.png';
     return(
             <IonHeader>
                     <div className={style.headCont}>

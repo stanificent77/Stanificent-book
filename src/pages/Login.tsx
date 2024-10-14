@@ -10,7 +10,7 @@ const Login: React.FC = () => {
     const [password, setPassword] = useState("");
     const [keepLoggedIn, setKeepLoggedIn] = useState(false);
 
-    const apiUrl = "https://stanificentglobal.com/api/login.php";
+    const apiUrl = "http://localhost/pos-endpoint/login.php";
 
     const handleLogin = async (event: React.FormEvent) => {
         event.preventDefault();

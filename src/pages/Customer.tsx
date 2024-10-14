@@ -45,7 +45,7 @@ const Customer: React.FC = () => {
         setOtherInformation('');
     }
 
-    const endpoint = 'https://stanificentglobal.com/api/addcustomer.php';
+    const endpoint = 'http://localhost/pos-endpoint/addcustomer.php';
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();

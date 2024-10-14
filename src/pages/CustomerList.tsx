@@ -18,7 +18,7 @@ const CustomerList: React.FC = () => {
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
-        const response = await fetch('https://stanificentglobal.com/api/getCustomers.php');
+        const response = await fetch('http://localhost/pos-endpoint/getCustomers.php');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

@@ -26,7 +26,7 @@ const CustomSplashScreen: React.FC = () => {
     <IonPage>
       <IonContent className="custom-splash-content">
         <div className='gif-cont'>
-          <img src="resources/PosPurple.gif" alt="Splash Screen" className="splash-gif" />
+          <img src="resources/splash.gif" alt="Splash Screen" className="splash-gif" />
         </div>
       </IonContent>
     </IonPage>

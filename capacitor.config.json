@@ -5,10 +5,21 @@
   "bundledWebRuntime": false,
   "plugins": {
     "SplashScreen": {
-      "showSpinner": false,
-      "splashFullScreen": true,
-      "splashImmersive": true,
-      "splashDelay": 3000
+      "launchShowDuration": 0,
+      "splashFullScreen": false,
+      "splashImmersive": false
     }
+  },
+  "android": {
+    "signingConfig": {
+      "keystorePath": "C:/Users/USER/stanPos/android/app/my-release-key.keystore",
+      "keystorePassword": "Sinachi123.",
+      "keyAlias": "my-key-alias",
+      "keyPassword": "Sinachi123."
+    },
+    "icon": "resources/StanLogo.png"
+  },
+  "ios": {
+    "icon": "resources/StanLogo.png" 
   }
 }
