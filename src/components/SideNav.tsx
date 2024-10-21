@@ -1,33 +1,58 @@
 import React from 'react';
-import { IonMenu, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonLabel } from '@ionic/react';
-import { useHistory } from 'react-router-dom';
+import { IonMenu, IonContent, IonHeader, IonItem } from '@ionic/react';
+import menu from './SideNav.module.css';
 
-const SideNav: React.FC = () => {
-  const history = useHistory();
+interface MenuProps {
+  contentId: string;
+  onNavigate: (path: string) => void; // Add onNavigate for navigation
+  onMenuOpen?: () => void; // Optional prop for menu open
+  onMenuClose?: () => void; // Optional prop for menu close
+}
 
-  const handleNavigation = (path: string) => {
-    history.push(path);
-  };
-
+const SideNav: React.FC<MenuProps> = ({ contentId, onNavigate, onMenuOpen, onMenuClose }) => {
   return (
-    <IonMenu side="start" contentId="main-content">
+    <IonMenu 
+      contentId={contentId}
+      onIonDidOpen={onMenuOpen} // Use onMenuOpen when menu opens
+      onIonDidClose={onMenuClose} // Use onMenuClose when menu closes
+    >
       <IonHeader>
-        <IonToolbar>
-          <IonTitle>Sidenav</IonTitle>
-        </IonToolbar>
+        {/* Your custom header content */}
       </IonHeader>
-      <IonContent>
-        <IonList>
-          <IonItem button onClick={() => handleNavigation('/dashboard')}>
-            <IonLabel>Dashboard</IonLabel>
+      <IonContent className={menu.menulist} style={{ height: "100vh", paddingTop: "2rem" }}>
+        <div className={menu.menuItem}>
+          <IonItem button onClick={() => onNavigate('/customer')}>
+            Add Customer
           </IonItem>
-          <IonItem button onClick={() => handleNavigation('/profile')}>
-            <IonLabel>Profile</IonLabel>
+        </div>
+        <div className={menu.menuItem}>
+          <IonItem button onClick={() => onNavigate('/add-tracker')}>
+            Add Tracker
           </IonItem>
-          <IonItem button onClick={() => handleNavigation('/settings')}>
-            <IonLabel>Settings</IonLabel>
+        </div>
+        <div className={menu.menuItem}>
+          <IonItem button onClick={() => onNavigate('/customers-list')}>
+            Customers List
           </IonItem>
-        </IonList>
+        </div>
+        <div className={menu.menuItem}>
+          <IonItem button onClick={() => onNavigate('/trackers-list')}>
+            Trackers List
+          </IonItem>
+        </div>
+
+        {/* Conditional Rendering for Admin Role */}
+        <div className={menu.subhead}>ADMIN</div>
+        <div className={menu.menuItem}>
+          <IonItem button onClick={() => onNavigate('/addemployee')}>
+            Add Employee
+          </IonItem>
+        </div>
+        <div className={menu.menuItem}>
+          <IonItem button onClick={() => onNavigate('/employeelist')}>
+            Employees List
+          </IonItem>
+        </div>
       </IonContent>
     </IonMenu>
   );

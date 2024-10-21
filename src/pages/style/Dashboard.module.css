@@ -77,6 +77,20 @@
     font-size: 25px;
 }
 
+.header{
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 0px solid black;
+}
+
+.head{
+    background: transparent;
+    border: 0px solid black;
+    width: fit-content;
+}
+
 @media (max-width: 670px){
     .firstContent{
         flex-direction: column;

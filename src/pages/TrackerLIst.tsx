@@ -133,7 +133,7 @@ const TrackerList: React.FC = () => {
                     <p><strong>Phone 1:</strong> {selectedTracker.PhoneNumber}</p>
                     <p><strong>Category:</strong> {selectedTracker.Category}</p>
                     <p><strong>Description:</strong> {selectedTracker.Description}</p>
-                    <p><strong>Other Information:</strong> {selectedTracker.OtherInformation}</p>
+                    <p><strong>Other Information:</strong> {selectedTracker.otherInformation}</p>
                     <p><strong>Occupation:</strong> {selectedTracker.Occupation}</p>
                     <p><strong>Address:</strong> {selectedTracker.Address}</p>
                     <p><strong>Vehicle Name:</strong> {selectedTracker.VehicleName}</p>

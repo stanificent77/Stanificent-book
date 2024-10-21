@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.stanificentglobal.app',
-  appName: 'Stanificent Pos Systen',
+  appName: 'Stanificent BookPoint',
   webDir: 'dist',
   bundledWebRuntime: false,
   plugins: {

@@ -5,7 +5,7 @@ import style from "./style/Login.module.css";
 import { useHistory } from 'react-router-dom';
 
 const Login: React.FC = () => {
-    const history = useHistory(); // Use useHistory hook
+    const history = useHistory();
     const [loginId, setLoginId] = useState("");
     const [password, setPassword] = useState("");
     const [keepLoggedIn, setKeepLoggedIn] = useState(false);
@@ -27,12 +27,8 @@ const Login: React.FC = () => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(loginData),
+                credentials: "include"
             });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(errorText || "Network response was not ok");
-            }
 
             const data = await response.json();
             if (data.success) {
@@ -41,21 +37,21 @@ const Login: React.FC = () => {
                     employee_tag: data.user.tag,
                     phoneNumber: data.user.phoneNumber,
                     role: data.user.role,
-                    hire_date: data.user.hire_date
+                    hire_date: data.user.hire_date,
+                    position: data.user.position
                 };
+                history.push("/dashboard");
+                // Store the session token
+                localStorage.setItem("session_token", data.session_token);
+                localStorage.setItem("userInfo", JSON.stringify(userInfo));
 
-                  if (keepLoggedIn) {
-                    localStorage.setItem("userInfo", JSON.stringify(userInfo));
-                  } else {
-                    localStorage.setItem("userInfo", JSON.stringify(userInfo));
-                  }
-                history.push("/dashboard"); // Redirect to the dashboard
+                 // Redirect to the dashboard
             } else {
                 alert(data.error || "Login failed");
             }
         } catch (error) {
             console.error("Error during login:", error);
-            alert("An error occurred. Please try again: ");
+            alert("An error occurred. Please try again.");
         }
     };
 

@@ -1,0 +1,47 @@
+.header{
+    border-bottom: 1px solid rgb(215, 215, 215);
+    padding: 8px;
+}
+
+.head{
+    padding-block: 4px;
+}
+
+
+.menulist{
+    background: var(--ion-menu-list);
+}
+
+.name{
+    color: var(--ion-name);
+}
+
+
+.head{
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.head span{
+    color: grey;
+    font-weight: 200;
+    font-size: 14px;
+}
+
+.menuItem{
+    border-bottom: 0px solid black;
+    width: 95%;
+    margin: auto;
+    padding-top: 2rem;
+    padding-bottom: 0.5rem; 
+}
+
+.subhead{
+    font-size: 18px;
+    width: 90%;
+    margin: auto;
+    margin-top: 1rem;
+    padding-inline: 5px;
+    border: 0px solid black;
+    color: rgb(215, 215, 215);
+}

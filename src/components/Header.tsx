@@ -1,34 +1,46 @@
-import { IonPage, IonHeader, IonIcon, IonToolbar, IonButton, IonContent, IonTab } from "@ionic/react";
-import React, {useEffect, useState} from "react";
+import { IonHeader, IonMenuButton } from "@ionic/react";
+import React, { useState } from "react";
 import style from './Header.module.css';
-import { personSharp, lockClosedSharp, settingsOutline, menuOutline } from 'ionicons/icons';
 import useUserInfo from "../hooks/useUserInfo";
+import SideNav from "./SideNav";
+import { useHistory } from "react-router-dom";
 
 const Header: React.FC = () => {
+  const { userName, employeeTag, userRole } = useUserInfo(); 
+  const [menuIsOpen, setMenuIsOpen] = useState(false);
+  const history = useHistory(); // Hook for navigating
 
-      
-    const { userName, employeeTag, userRole } = useUserInfo(); 
+  const handleMenuOpen = () => {
+    setMenuIsOpen(true);
+  };
 
+  const handleMenuClose = () => {
+    setMenuIsOpen(false);
+  };
 
-    const logo = '../resources/StanLogo.png';
-    return(
-            <IonHeader>
-                    <div className={style.headCont}>
-                        <div className={style.title}>
-                            <div className={style.logo}>
-                                <img src={logo}></img>
-                            </div>
-                            <div className={style.tag} style={{fontFamily:"cursive"}}>
-                                POS SYSTEM
-                            </div>
-                        </div> 
-                        <div className={style.stat}>
-                            <div className={style.name}>{userName}</div>
-                            <div className={style.role}>{userRole}</div>
-                        </div>
-                    </div>
-            </IonHeader>
-    )
-}
+  const handleNavigation = (path: string) => {
+    history.push(path); // Handle navigation
+  };
+
+  return (
+    <IonHeader>
+      <SideNav 
+        contentId="dashboard-content" 
+        onMenuOpen={handleMenuOpen} 
+        onMenuClose={handleMenuClose} 
+        onNavigate={handleNavigation}  // Passing onNavigate function here
+      />
+      <div className={style.headCont}>
+        <div className={style.title}>
+          <IonMenuButton />
+        </div> 
+        <div className={style.stat}>
+          <div className={style.name}>{userName}</div>
+          <div className={style.role}>{userRole}</div>
+        </div>
+      </div>
+    </IonHeader>
+  );
+};
 
 export default Header;

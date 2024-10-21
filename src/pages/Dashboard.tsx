@@ -1,33 +1,62 @@
-import { IonPage, IonContent, IonButton, IonIcon } from "@ionic/react";
+import { IonPage, IonContent, IonButton, IonIcon, IonMenuButton } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import { useHistory } from 'react-router-dom';
-import { copySharp, cartSharp, todaySharp, calendarClearSharp } from 'ionicons/icons';
+import { todaySharp, calendarClearSharp, cartSharp } from 'ionicons/icons';
 import style from "./style/Dashboard.module.css";
-import Header from "../components/Header";
 import Logout from "../components/Logout";
 import useUserInfo from "../hooks/useUserInfo";
+import { useSession } from '../hooks/useSession';
+import SideNav from "../components/SideNav";
 
 const Dashboard: React.FC = () => {
-    const { userName, employeeTag } = useUserInfo(); 
+  const history = useHistory();
+  const { isAuthenticated, loading, checkSession, logout } = useSession();
+  const [menuIsOpen, setMenuIsOpen] = useState(false);
+
+  useEffect(() => {
+    // Check session when the component loads
+    checkSession();
+  }, [checkSession]);
+
+  const handleMenuOpen = () => {
+    setMenuIsOpen(true);
+  };
+
+  const handleMenuClose = () => {
+    setMenuIsOpen(false);
+  };
+
+  // This function handles navigation when the user clicks on a menu item
+  const handleNavigation = (path: string) => {
+    history.push(path);
+  };
+
+  const { userName, employeeTag } = useUserInfo(); 
 
   return (
-    <IonPage>
-      <Header />
-      <IonContent className={style.content}>
+    <IonPage id="dashboard-content">
+      <SideNav 
+        contentId="dashboard-content" 
+        onMenuOpen={handleMenuOpen} 
+        onMenuClose={handleMenuClose} 
+        onNavigate={handleNavigation}  // Pass the onNavigate function here
+      />
+      <IonContent className={style.content} onClick={handleMenuClose}>
+        <div className={style.header}>
+          <div className={style.head}>
+            <IonMenuButton />
+          </div>
+          <div className={style.employeeTag}>
+            <div>
+              Employee Tag ID: {employeeTag}
+            </div>
+          </div>
+        </div>
         <div className={style.firstBlock}>
           <div className={style.firstContent}>
             <div>
               <span className={style.userName}>{userName},</span>
               <span className={style.write}> here's what's happening with your sales overview.</span>
-            </div>
-            <div className={style.tag}>
-              <div>
-                <IonIcon style={{ border: "0px solid black", padding: "5px", borderRadius: "4px", background: "#2e6e80" }} icon={copySharp} />
-              </div>
-              <div>
-                <div>Employee ID</div>
-                <div>{employeeTag}</div>
-              </div>
             </div>
           </div>
         </div>

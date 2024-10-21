@@ -1,13 +1,14 @@
 {
   "appId": "com.stanificentglobal.app",
-  "appName": "Stanificent POS System",
+  "appName": "Stanificent BookPoint",
   "webDir": "dist",
   "bundledWebRuntime": false,
   "plugins": {
     "SplashScreen": {
-      "launchShowDuration": 0,
-      "splashFullScreen": false,
-      "splashImmersive": false
+      "showSpinner": false,
+      "autoHide": false,
+      "backgroundColor": "#ffffff",
+      "androidScaleType": "CENTER_CROP"
     }
   },
   "android": {

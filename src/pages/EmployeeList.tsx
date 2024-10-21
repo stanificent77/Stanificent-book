@@ -1,27 +1,46 @@
 import React, { useEffect, useState } from 'react';
 import {
-  IonPage, IonContent, IonSearchbar, IonList, IonItem, IonLabel, IonSkeletonText, IonModal,
-  IonButton, IonGrid, IonRow, IonCol, IonInput, IonIcon, IonCard
+  IonPage,
+  IonContent,
+  IonSearchbar,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonSkeletonText,
+  IonModal,
+  IonButton,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonIcon,
+  IonCard,
 } from '@ionic/react';
 import { closeCircle } from 'ionicons/icons';
 import BackButton from '../components/BackButton';
+import axios from 'axios';
+import style from '../pages/style/EmployeeList.module.css';
+
+// Define the type for Employee
+interface Employee {
+  employee_tag: string;
+  username: string;
+  email: string;
+  phoneNumber: string;
+}
 
 const EmployeeList: React.FC = () => {
-  const [employees, setEmployees] = useState<any[]>([]);
+  const [employees, setEmployees] = useState<Employee[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
-  const [selectedEmployee, setSelectedEmployee] = useState<any>(null);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editForm, setEditForm] = useState({ username: '', email: '', phoneNumber: '', password: '' });
 
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const response = await fetch('http://localhost/pos-endpoint/getEmployees.php');
-        const data = await response.json();
-        if (Array.isArray(data)) {
-          setEmployees(data);
-        }
+        const response = await axios.get<Employee[]>('http://localhost/pos-endpoint/getEmployees.php');
+        setEmployees(response.data);
       } catch (error) {
         console.error('Error fetching employees:', error);
       } finally {
@@ -39,13 +58,13 @@ const EmployeeList: React.FC = () => {
     employee.phoneNumber.includes(searchTerm)
   );
 
-  const openModal = (employee: any) => {
+  const openModal = (employee: Employee) => {
     setSelectedEmployee(employee);
     setEditForm({
       username: employee.username,
       email: employee.email,
       phoneNumber: employee.phoneNumber,
-      password: '', // Leave password blank initially
+      password: '',
     });
     setIsModalOpen(true);
   };
@@ -55,43 +74,32 @@ const EmployeeList: React.FC = () => {
     setIsModalOpen(false);
   };
 
-  const handleEditChange = (e: any) => {
+  const handleEditChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setEditForm({ ...editForm, [name]: value });
+    setEditForm(prev => ({ ...prev, [name]: value }));
   };
 
   const saveChanges = async () => {
     if (!selectedEmployee) return;
 
     const updatedEmployee = {
-      employee_tag: selectedEmployee.employee_tag, // Use employee_tag as the unique identifier
+      employees_tag: selectedEmployee.employee_tag,
       username: editForm.username,
       email: editForm.email,
       phoneNumber: editForm.phoneNumber,
-      password: editForm.password || null, // Handle optional password
+      password: editForm.password || '',
     };
 
     try {
-      const response = await fetch('http://localhost/pos-endpoint/updateEmployee.php', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedEmployee),
-      });
+      const response = await axios.put('http://localhost/pos-endpoint/updateemployee.php', updatedEmployee);
+      const updatedData = response.data;
+      console.log('Employee updated:', updatedData);
 
-      if (response.ok) {
-        const updatedData = await response.json();
-        console.log('Employee updated:', updatedData);
-        // Update the UI after success
-        const updatedList = employees.map(employee =>
-          employee.employee_tag === selectedEmployee.employee_tag ? { ...employee, ...editForm } : employee
-        );
-        setEmployees(updatedList);
-        closeModal();
-      } else {
-        throw new Error('Failed to update employee');
-      }
+      const updatedList = employees.map(employee =>
+        employee.employee_tag === selectedEmployee.employee_tag ? { ...employee, ...editForm } : employee
+      );
+      setEmployees(updatedList);
+      closeModal();
     } catch (error) {
       console.error('Error saving employee changes:', error);
     }
@@ -105,7 +113,7 @@ const EmployeeList: React.FC = () => {
         <IonSearchbar
           placeholder="Search by name, phone, etc."
           value={searchTerm}
-          onIonInput={(e: any) => setSearchTerm(e.target.value)}
+          onIonInput={(e: CustomEvent) => setSearchTerm(e.detail.value!)}
         />
 
         {loading ? (
@@ -126,8 +134,8 @@ const EmployeeList: React.FC = () => {
         ) : (
           <IonList>
             {filteredEmployees.length > 0 ? (
-              filteredEmployees.map((employee, index) => (
-                <IonItem key={index} button onClick={() => openModal(employee)}>
+              filteredEmployees.map((employee) => (
+                <IonItem key={employee.employee_tag} button onClick={() => openModal(employee)}>
                   <IonLabel>
                     <h2 style={{ fontWeight: 'bolder' }}>{employee.username}</h2>
                     <p>Employee Tag: {employee.employee_tag}</p>
@@ -145,45 +153,73 @@ const EmployeeList: React.FC = () => {
         )}
 
         {/* Modal for editing employee */}
-        <IonModal isOpen={isModalOpen} onDidDismiss={closeModal}>
+        <IonModal style={{border:"0px solid black"}} isOpen={isModalOpen} onDidDismiss={closeModal}>
           <IonCard>
             <IonButton fill="clear" onClick={closeModal} className="close-btn" style={{ float: 'right' }}>
               <IonIcon icon={closeCircle} />
             </IonButton>
             {selectedEmployee && (
               <IonGrid>
-                <IonRow>
-                  <IonCol>
+                <IonRow style={{"--border":"0px solid black"}}>
+                  <IonCol style={{border:"0px solid black"}}>
                     <h2>Edit Employee</h2>
-                    <IonLabel>Username:</IonLabel>
-                    <IonInput
-                      name="username"
-                      value={editForm.username}
-                      onIonChange={handleEditChange}
-                      placeholder="Username"
-                    />
-                    <IonLabel>Email:</IonLabel>
-                    <IonInput
-                      name="email"
-                      value={editForm.email}
-                      onIonChange={handleEditChange}
-                      placeholder="Email"
-                    />
-                    <IonLabel>Phone Number:</IonLabel>
-                    <IonInput
-                      name="phoneNumber"
-                      value={editForm.phoneNumber}
-                      onIonChange={handleEditChange}
-                      placeholder="Phone Number"
-                    />
-                    <IonLabel>Password:</IonLabel>
-                    <IonInput
-                      name="password"
-                      type="password"
-                      value={editForm.password}
-                      onIonChange={handleEditChange}
-                      placeholder="Leave blank to keep current password"
-                    />
+                    <div>
+                      <div>
+                        <label className={style.lab}>Username:</label>
+                      </div>
+                      <div>
+                        <input
+className={style.input}
+                          name="username"
+                          value={editForm.username}
+                          onChange={handleEditChange}
+                          placeholder="Username"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <div>
+                        <label className={style.lab}>Email:</label>
+                      </div>
+                      <div>
+                        <input
+className={style.input}
+                          name="email"
+                          value={editForm.email}
+                          onChange={handleEditChange}
+                          placeholder="Email"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <div>
+                        <label className={style.lab}>Phone Number:</label>
+                      </div>
+                      <div>
+                        <input
+className={style.input}
+                          name="phoneNumber"
+                          value={editForm.phoneNumber}
+                          onChange={handleEditChange}
+                          placeholder="Phone Number"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <div>
+                        <label className={style.lab}>Password:</label>
+                      </div>
+                      <div>
+                        <input
+className={style.input}
+                          name="password"
+                          type="password"
+                          value={editForm.password}
+                          onChange={handleEditChange} // Use standard onChange
+                          placeholder="Leave blank to keep current password"
+                        />
+                      </div>
+                    </div>
                   </IonCol>
                 </IonRow>
               </IonGrid>

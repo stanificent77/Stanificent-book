@@ -4,6 +4,9 @@ import { IonApp, IonRouterOutlet, setupIonicReact, IonSplitPane } from '@ionic/r
 import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/Home';
 import Login from './pages/Login';
+import useTokenValidation from './hooks/useTokenValidation';
+import { useHistory } from "react-router-dom";
+import { useSession } from './hooks/useSession';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -45,10 +48,20 @@ import CustomerList from './pages/CustomerList';
 import TrackerList from './pages/TrackerLIst';
 import EmployeeList from './pages/EmployeeList';
 import CustomSplashScreen from './components/CustomSplashScreen';
+import ProtectedPage from './pages/ProtectedPage';
+
 
 setupIonicReact();
 
 const App: React.FC = () => {
+
+const history = useHistory();
+
+  const token = localStorage.getItem('token') || '';
+  const [errors, setErrors] = useState<string[]>([]);
+
+
+  useTokenValidation(token, setErrors);
   
   const [isAppReady, setIsAppReady] = useState(false);
 
@@ -56,7 +69,7 @@ const App: React.FC = () => {
     // Simulate app initialization, such as loading data or performing setup tasks
     setTimeout(() => {
       setIsAppReady(true);
-    }, 3000); // This should match the GIF display duration
+    }, 5000); // This should match the GIF display duration
   }, []);
 
 
@@ -64,52 +77,50 @@ const App: React.FC = () => {
 
   return(
     <IonApp>
-      { isAppReady ? (
-        <IonReactRouter>
-          <IonRouterOutlet>
-            <Route exact path="/home">
-              <Home />
-            </Route>
-            <Route exact path="/login">
-              <Login />
-            </Route>
-            <Route exact path="/register">
-              <Register />
-            </Route>
-            <Route exact path="/tracker">
-              <Tracker />
-            </Route>
-            <Route exact path="/dashboard">
-              <Dashboard />
-            </Route>
-            <Route exact path="/nav">
-              <SideNav />
-            </Route>
-            <Route exact path="/">
-              <Redirect to="/login" />
-            </Route>
-            <Route exact path='/addemployee'>
-              <AddEmployee/>
-            </Route>
-            <Route exact path='/customer'>
-              <Customer/>
-            </Route>
-            <Route exact path='/trackerlist'>
-              <TrackerList/>
-            </Route>
-            <Route exact path='/employeelist'>
-              <EmployeeList/>
-            </Route>
-            <Route exact path='/customerlist'>
-              <CustomerList/>
-            </Route>
-            <Route exact path='/dash'>
-              <Dash/>
-            </Route>
-          </IonRouterOutlet>
-        </IonReactRouter> ) : (
-          <CustomSplashScreen/>
-        )}
+      <IonSplitPane id="dashboard-content">
+        { isAppReady ? (
+          <IonReactRouter>
+            <IonRouterOutlet id="dashboard-content">
+              <Route exact path="/home">
+                <Home />
+              </Route>
+              <Route exact path="/login" component={Login} />
+              <Route exact path="/register" component={Register}/>
+              <Route exact path="/tracker">
+                <Tracker />
+              </Route>
+              <Route exact path="/dashboard">
+                <Dashboard />
+              </Route>
+              <Route exact path="/">
+                <Redirect to="/login" />
+              </Route>
+              <Route exact path='/addemployee'>
+                <AddEmployee/>
+              </Route>
+              <Route exact path='/customer'>
+                <Customer/>
+              </Route>
+              <Route exact path='/trackerlist'>
+                <TrackerList/>
+              </Route>
+              <Route exact path='/employeelist'>
+                <EmployeeList/>
+              </Route>
+              <Route exact path='/customerlist'>
+                <CustomerList/>
+              </Route>
+              <Route exact path='/protectedpage'>
+                <ProtectedPage/>
+              </Route>
+              <Route exact path='/dash'>
+                <Dash/>
+              </Route>
+            </IonRouterOutlet>
+          </IonReactRouter> ) : (
+            <CustomSplashScreen/>
+          )}
+        </IonSplitPane>
     </IonApp>
   );
 };
