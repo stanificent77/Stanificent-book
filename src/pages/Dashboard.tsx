@@ -1,22 +1,23 @@
-import { IonPage, IonContent, IonButton, IonIcon, IonMenuButton } from "@ionic/react";
+import { IonPage, IonContent, IonButton, IonIcon, IonMenuButton, IonToast } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import { useHistory } from 'react-router-dom';
 import { todaySharp, calendarClearSharp, cartSharp } from 'ionicons/icons';
 import style from "./style/Dashboard.module.css";
-import Logout from "../components/Logout";
 import useUserInfo from "../hooks/useUserInfo";
 import { useSession } from '../hooks/useSession';
 import SideNav from "../components/SideNav";
+import useTokenValidation from '../hooks/useTokenValidation'; 
+import Logout from "../components/Logout";
 
 const Dashboard: React.FC = () => {
   const history = useHistory();
-  const { isAuthenticated, loading, checkSession, logout } = useSession();
-  const [menuIsOpen, setMenuIsOpen] = useState(false);
 
-  useEffect(() => {
-    // Check session when the component loads
-    checkSession();
-  }, [checkSession]);
+  const [menuIsOpen, setMenuIsOpen] = useState(false);
+  const [toast, setToast] = useState(false);
+  const [toastText, setToastText] = useState("")
+
+
+
 
   const handleMenuOpen = () => {
     setMenuIsOpen(true);

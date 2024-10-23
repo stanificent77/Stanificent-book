@@ -23,34 +23,52 @@ const useUserInfo = () => {
   const history = useHistory();
 
   const fetchUserInfo = () => {
-    const storedUserInfo = localStorage.getItem('userInfo') || sessionStorage.getItem('userInfo');
-    if (storedUserInfo) {
-      const userInfoData = JSON.parse(storedUserInfo);
-      setUserInfo({
-        userName: userInfoData.username,
-        userRole: userInfoData.role,
-        employeeTag: userInfoData.employee_tag,
-        hireDate: userInfoData.hire_date,
-        phoneNumber: userInfoData.phoneNumber,
-        position: userInfoData.position
-      });
-    } else {
-      history.push('/login'); // Redirect to login if no user info is found
+    try {
+      const storedUserInfo = localStorage.getItem('userInfo') || sessionStorage.getItem('userInfo');
+      
+      if (storedUserInfo) {
+        const userInfoData = JSON.parse(storedUserInfo);
+
+        if (userInfoData && userInfoData.username) {
+          setUserInfo({
+            userName: userInfoData.username,
+            userRole: userInfoData.role,
+            employeeTag: userInfoData.employee_tag,
+            hireDate: userInfoData.hire_date,
+            phoneNumber: userInfoData.phoneNumber,
+            position: userInfoData.position
+          });
+        } else {
+          console.error('Invalid user info data');
+          if (history) {
+            history.push('/login'); // Ensure history is available before pushing
+          }
+        }
+      } else {
+        if (history) {
+          history.push('/login'); // Ensure history is available before pushing
+        }
+      }
+    } catch (error) {
+      console.error('Error parsing user info:', error);
+      if (history) {
+        history.push('/login'); // Ensure history is available before pushing
+      }
     }
   };
 
   useEffect(() => {
-    fetchUserInfo(); // Fetch user info when component mounts
+    fetchUserInfo(); // Fetch user info when the component mounts
 
     // Optional: Set an interval to refresh user info periodically
     const intervalId = setInterval(() => {
       fetchUserInfo();
-    }, 15000); // Refresh every 60 seconds (adjust as needed)
+    }, 6000); // Refresh every 60 seconds
 
     return () => {
       clearInterval(intervalId); // Clean up the interval on unmount
     };
-  }, [history]);
+  }, [history]); // Only run once on mount
 
   return userInfo;
 };

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonSearchbar, IonList, IonItem,
-  IonLabel, IonSkeletonText, IonModal, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonCard
+  IonLabel, IonSkeletonText, IonModal, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonCard, IonLoading
 } from '@ionic/react';
 import { closeCircle, chevronBack } from 'ionicons/icons';
 import Header from '../components/Header';
@@ -21,7 +21,7 @@ const TrackerList: React.FC = () => {
   useEffect(() => {
     const fetchTrackers = async () => {
       try {
-        const response = await fetch('http://localhost/pos-endpoint/getTracker.php');
+        const response = await fetch('https://stanificentglobal.com/api/getTracker.php');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

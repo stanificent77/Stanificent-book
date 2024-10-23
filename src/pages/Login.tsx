@@ -1,4 +1,4 @@
-import { IonContent, IonPage, IonIcon, IonToggle, IonCard } from "@ionic/react";
+import { IonContent, IonPage, IonIcon, IonToggle, IonCard, IonLoading, IonToast } from "@ionic/react";
 import React, { useState } from "react";
 import { personSharp, lockClosedSharp } from 'ionicons/icons';
 import style from "./style/Login.module.css";
@@ -9,8 +9,10 @@ const Login: React.FC = () => {
     const [loginId, setLoginId] = useState("");
     const [password, setPassword] = useState("");
     const [keepLoggedIn, setKeepLoggedIn] = useState(false);
+    const [toast, setToast] = useState(false);
+    const [toastText, setToastText] = useState("")
 
-    const apiUrl = "http://localhost/pos-endpoint/login.php";
+    const apiUrl = "https://stanificentglobal.com/api/login.php";
 
     const handleLogin = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -40,18 +42,22 @@ const Login: React.FC = () => {
                     hire_date: data.user.hire_date,
                     position: data.user.position
                 };
+                sessionStorage.setItem("session_token", data.session_token);
+                sessionStorage.setItem("userInfo", JSON.stringify(userInfo));
+                setToastText("Login successful")
+                setToast(true);
                 history.push("/dashboard");
                 // Store the session token
-                localStorage.setItem("session_token", data.session_token);
-                localStorage.setItem("userInfo", JSON.stringify(userInfo));
 
                  // Redirect to the dashboard
             } else {
-                alert(data.error || "Login failed");
+                setToastText(data.error || "Login failed")
+                setToast(true);
             }
         } catch (error) {
             console.error("Error during login:", error);
-            alert("An error occurred. Please try again.");
+            setToastText("An error occurred. Please try again.")
+            setToast(true);
         }
     };
 
@@ -91,7 +97,10 @@ const Login: React.FC = () => {
                                         />
                                     </div>
                                     <div>
-                                        <button style={{width: "100%", marginTop: "2.5rem", background:"#443d81", padding:"12px", borderRadius:"5px", color:"white"}}>LOGIN</button>
+                                       <button style={{width: "100%", marginTop: "2.5rem", background:"#443d81", padding:"12px", borderRadius:"5px", color:"white"}} id="loader">Login</button>
+                                    </div>
+                                    <div>
+                                        <IonLoading className="loading" trigger="loader" message="Logging in" duration={4000}/>
                                     </div>
                                 </form>
                             </div>
@@ -102,6 +111,11 @@ const Login: React.FC = () => {
                         <img src={pics}></img>
                     </div>
                 </div>
+                <IonToast
+                    isOpen={toast}
+                    message={toastText}
+                    onDidDismiss={() => setToast(false)}
+                    duration={5000}></IonToast>
             </IonContent>
         </IonPage>
     )

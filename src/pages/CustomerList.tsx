@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonSearchbar, IonList, IonItem, IonLabel, IonSkeletonText } from '@ionic/react';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonSearchbar, IonList, IonItem, IonLabel, IonSkeletonText, IonToast } from '@ionic/react';
 import Header from '../components/Header';
 import style from './style/CustomerList.module.css';
 import useUserInfo from "../hooks/useUserInfo";
@@ -13,12 +13,14 @@ const CustomerList: React.FC = () => {
 
   const [customers, setCustomers] = useState<any[]>([]); // Specify the type as an array of any
   const [searchTerm, setSearchTerm] = useState('');
-  const [loading, setLoading] = useState(true); // State to manage the loading status
+  const [loading, setLoading] = useState(true);
+  const [toast, setToast] = useState(false);
+  const [toastText, setToastText] = useState(""); // State to manage the loading status
 
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
-        const response = await fetch('http://localhost/pos-endpoint/getCustomers.php');
+        const response = await fetch('https://stanificentglobal.com/api/getCustomers.php');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -104,6 +106,15 @@ const CustomerList: React.FC = () => {
             )}
           </IonList>
         )}
+                        <div>
+                    <IonToast
+                    isOpen={toast}
+                    message={toastText}
+                    onDidDismiss={() => setToast(false)}
+                    duration={5000}>
+                        
+                    </IonToast>
+                </div>
       </IonContent>
     </IonPage>
   );

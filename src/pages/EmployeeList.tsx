@@ -14,6 +14,7 @@ import {
   IonCol,
   IonIcon,
   IonCard,
+  IonLoading,
 } from '@ionic/react';
 import { closeCircle } from 'ionicons/icons';
 import BackButton from '../components/BackButton';
@@ -35,11 +36,12 @@ const EmployeeList: React.FC = () => {
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editForm, setEditForm] = useState({ username: '', email: '', phoneNumber: '', password: '' });
+  const [loader, setLoader] = useState(false);
 
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const response = await axios.get<Employee[]>('http://localhost/pos-endpoint/getEmployees.php');
+        const response = await axios.get<Employee[]>('https://stanificentglobal.com/api/getEmployees.php');
         setEmployees(response.data);
       } catch (error) {
         console.error('Error fetching employees:', error);
@@ -91,7 +93,7 @@ const EmployeeList: React.FC = () => {
     };
 
     try {
-      const response = await axios.put('http://localhost/pos-endpoint/updateemployee.php', updatedEmployee);
+      const response = await axios.put('https://stanificentglobal.com/api/updateEmployee.php', updatedEmployee);
       const updatedData = response.data;
       console.log('Employee updated:', updatedData);
 
@@ -224,7 +226,10 @@ className={style.input}
                 </IonRow>
               </IonGrid>
             )}
-            <IonButton onClick={saveChanges}>Save Changes</IonButton>
+            <IonButton id='load' onClick={saveChanges}>Save Changes</IonButton>
+            <div>
+              <IonLoading className="loading" trigger="load" message="Updating..." spinner="crescent" duration={4000}/>
+            </div>
           </IonCard>
         </IonModal>
       </IonContent>

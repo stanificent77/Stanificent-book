@@ -7,9 +7,10 @@ interface MenuProps {
   onNavigate: (path: string) => void; // Add onNavigate for navigation
   onMenuOpen?: () => void; // Optional prop for menu open
   onMenuClose?: () => void; // Optional prop for menu close
+  isAdmin?: boolean; // Prop to check if the user is an admin
 }
 
-const SideNav: React.FC<MenuProps> = ({ contentId, onNavigate, onMenuOpen, onMenuClose }) => {
+const SideNav: React.FC<MenuProps> = ({ contentId, onNavigate, onMenuOpen, onMenuClose, isAdmin }) => {
   return (
     <IonMenu 
       contentId={contentId}
@@ -42,17 +43,21 @@ const SideNav: React.FC<MenuProps> = ({ contentId, onNavigate, onMenuOpen, onMen
         </div>
 
         {/* Conditional Rendering for Admin Role */}
-        <div className={menu.subhead}>ADMIN</div>
-        <div className={menu.menuItem}>
-          <IonItem button onClick={() => onNavigate('/addemployee')}>
-            Add Employee
-          </IonItem>
-        </div>
-        <div className={menu.menuItem}>
-          <IonItem button onClick={() => onNavigate('/employeelist')}>
-            Employees List
-          </IonItem>
-        </div>
+        {isAdmin && (
+          <>
+            <div className={menu.subhead}>ADMIN</div>
+            <div className={menu.menuItem}>
+              <IonItem button onClick={() => onNavigate('/addemployee')}>
+                Add Employee
+              </IonItem>
+            </div>
+            <div className={menu.menuItem}>
+              <IonItem button onClick={() => onNavigate('/employeelist')}>
+                Employees List
+              </IonItem>
+            </div>
+          </>
+        )}
       </IonContent>
     </IonMenu>
   );

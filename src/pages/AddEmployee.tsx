@@ -1,18 +1,34 @@
-import { IonPage, IonContent, IonButton, IonInput } from "@ionic/react";
-import React, {useState} from "react";
+import { IonPage, IonContent, IonButton, IonInput, IonToast } from "@ionic/react";
+import React, {useState, useEffect} from "react";
 import { IonIcon } from '@ionic/react';
 import { personSharp, lockClosedSharp, addCircleSharp, settingsOutline, copySharp, cartSharp, todaySharp, calendarClearSharp, informationCircleOutline, backspace, arrowBack } from 'ionicons/icons';
 import Header from "../components/Header";
 import style from './style/AddEmployee.module.css'
 import { addIcons } from "ionicons";
 import DatePicker from 'react-datepicker';
+import { useSession } from "../hooks/useSession";
 import 'react-datepicker/dist/react-datepicker.css';
 import MaskedInput from 'react-text-mask';
 import useUserInfo from "../hooks/useUserInfo";
 import useOfflineSync  from '../hooks/useOfflineSync';
 import BackButton from "../components/BackButton";
+import useTokenValidation from "../hooks/useTokenValidation";
 
 const AddEmployee: React.FC = () => {
+
+    const { isAuthenticated, loading, checkSession, logout } = useSession();
+
+    useEffect(() => {
+      checkSession(); // Check the session when the component mounts
+    }, [checkSession]);
+
+    const token = localStorage.getItem('token') || '';
+    const [errors, setErrors] = useState<string[]>([]);
+    const [toast, setToast] = useState(false);
+    const [toastText, setToastText] = useState("");
+  
+  
+    useTokenValidation(token, setErrors);
 
     const { userName, employeeTag } = useUserInfo();
     const { saveDataOffline } = useOfflineSync();
@@ -26,7 +42,7 @@ const AddEmployee: React.FC = () => {
     const [email, setEmail] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [role, setRole] = useState("user");
-    const endpoint = 'http://localhost/pos-endpoint/addemployee.php';
+    const endpoint = 'https://stanificentglobal.com/api/addemployee.php';
 
     const employeeData = {
         username: username,
@@ -69,17 +85,20 @@ const AddEmployee: React.FC = () => {
             });
     
             const data = await response.json();
-            alert(data.message); // Notify the user about the registration status
+            setToastText(data.message)
+            setToast(true) // Notify the user about the registration status
           } catch (error) {
             console.error("Error:", error);
-            alert("An error occurred during registration.");
+            setToastText("An error occurred during registration.");
+            setToast(true);
           }
         } else {
           // Use the sync function when offline
           saveDataOffline(employeeData, endpoint);
-          alert(
+          setToastText(
             "You are offline. Employee data saved locally and will sync when online."
           );
+          setToast(true);
           clearFormFields();
         }
       };
@@ -192,6 +211,15 @@ const AddEmployee: React.FC = () => {
                             </div>
                         </div>
                     </form>
+                </div>
+                <div>
+                    <IonToast
+                    isOpen={toast}
+                    message={toastText}
+                    onDidDismiss={() => setToast(false)}
+                    duration={5000}>
+                        
+                    </IonToast>
                 </div>
 
             </IonContent>

@@ -1,4 +1,4 @@
-import { IonPage, IonContent, IonIcon, IonButton } from "@ionic/react";
+import { IonPage, IonContent, IonIcon, IonButton, IonToast, IonLoading, IonAlert } from "@ionic/react";
 import { personSharp, lockClosedSharp, settingsOutline, informationCircleOutline, arrowBack } from 'ionicons/icons';
 import Header from "../components/Header";
 import React, { useState } from "react";
@@ -9,8 +9,13 @@ import BackButton from "../components/BackButton";
 
 const Tracker: React.FC = () => {
     const { userName, employeeTag } = useUserInfo();
-    const endpoint = "http://localhost/pos-endpoint/track.php";
+    const endpoint = "https://stanificentglobal.com/api/track.php";
     const { saveDataOffline } = useOfflineSync();
+    const [isOffline, setIsOffline] = useState(false);
+    const [popText, setPopText] = useState("");
+
+    const [toast, setToast] = useState(false);
+    const [toastText, setToastText] = useState("");
     
     const initialFormState = {
         firstName: '',
@@ -80,16 +85,19 @@ const Tracker: React.FC = () => {
                     console.error("Response body:", errorData);
                 } else {
                     const data = await response.json();
-                    console.log("Form submitted successfully", data);
+                    setToastText("Saved Successfully")
+                    setToast(true);
                     // Clear form after successful submission
                     clearForm();
                 }
             } catch (error) {
-                console.error("Error submitting form:", error);
+                setToastText("Error submitting form")
+                setToast(true);
             }
         }else{
             await saveDataOffline(formData, endpoint);
-            alert(
+            setIsOffline(true);
+            setPopText(
               "You are offline. Employee data saved locally and will sync when online."
             );
             clearForm();
@@ -305,13 +313,36 @@ const Tracker: React.FC = () => {
 
                     <div className={style.butCont}>
                         <div className={style.butDiv}>
-                            <button className={style.cancel} style={{padding:"12px",  width:"100%", borderRadius:"3px", border:"none", color:"white", background:"#443d81"}} type="submit" >Save</button>
+                            <IonButton id="loader" className={style.cancel} style={{padding:"12px",  width:"100%", borderRadius:"3px", border:"none", color:"white", background:"#443d81"}} type="submit" >Save</IonButton>
                         </div>
                         <div className={style.butDiv}>
-                            <button className={style.save} style={{padding:"12px", width:"100%", borderRadius:"3px", border:"none", background:"#443d81a9", color:"white"}} onClick={clearForm} >Clear</button>
+                            <IonButton  className={style.save} style={{padding:"12px", width:"100%", borderRadius:"3px", border:"none", background:"#443d81a9", color:"white"}} onClick={clearForm} >Clear</IonButton>
                         </div>
                     </div>
+
+                    <div>
+                    <IonLoading className="loading" trigger="loader" message="Saving Details" duration={4000}/>
+                    </div>
                 </form>
+                <div>
+                    <IonToast
+                    isOpen={toast}
+                    message={toastText}
+                    onDidDismiss={() => setToast(false)}
+                    duration={5000}>
+                        
+                    </IonToast>
+                </div>
+                <div>
+                <IonAlert
+                    isOpen={isOffline}
+                    header="Offline Action"
+                    subHeader="all offline actions will sync once your device is back online"
+                    message={popText}
+                    buttons={['Action']}
+                    onDidDismiss={() => setIsOffline(false)}
+                ></IonAlert>
+                </div>
             </IonContent>
         </IonPage>
     )

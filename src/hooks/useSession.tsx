@@ -1,5 +1,7 @@
+// hooks/useSession.ts
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import useUserInfo from '../hooks/useUserInfo';
 
 interface UseSessionReturn {
   isAuthenticated: boolean;
@@ -11,14 +13,12 @@ interface UseSessionReturn {
 export const useSession = (): UseSessionReturn => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
-  const history = useHistory(); // Initialize history for navigation
+  const { employeeTag } = useUserInfo();
+  const history = useHistory();
 
-  // Function to check if the session token is valid
   const checkSession = async () => {
     setLoading(true);
-
-    // Retrieve session token from localStorage or sessionStorage
-    const sessionToken = localStorage.getItem('session_token') || sessionStorage.getItem('session_token');
+    const sessionToken = sessionStorage.getItem('session_token');
 
     if (!sessionToken) {
       setIsAuthenticated(false);
@@ -27,24 +27,22 @@ export const useSession = (): UseSessionReturn => {
     }
 
     try {
-      const response = await fetch('http://localhost/pos-endpoint/verify_session.php', {
+      const response = await fetch('https://stanificentglobal.com/api/verify_session.php', {
         method: 'GET',
         headers: {
-          'Authorization': sessionToken, // Pass the token in the Authorization header
+          'Authorization': sessionToken,
           'Content-Type': 'application/json',
         },
-        credentials: 'include', // Include cookies for session management
+        credentials: 'include',
       });
 
       const data = await response.json();
 
       if (data.success) {
-        // If the session is valid, mark the user as authenticated
         setIsAuthenticated(true);
       } else {
-        // If session is invalid, log out the user
         setIsAuthenticated(false);
-        logout();
+        await logout(); // Wait for logout to complete
       }
     } catch (error) {
       console.error('Error verifying session:', error);
@@ -54,21 +52,35 @@ export const useSession = (): UseSessionReturn => {
     setLoading(false);
   };
 
-  const logout = () => {
-    // Remove all stored session and user information
-    localStorage.removeItem('session_token');
-    sessionStorage.removeItem('session_token');
-    localStorage.removeItem('userInfo');
-    sessionStorage.removeItem('userInfo');
-    
-    // Redirect the user to the login page
-    history.push('/login');
+  const logout = async () => {
+    try {
+      const response = await fetch('https://stanificentglobal.com/api/logout.php', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ employeeTag })
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        console.log(result.message);
+        sessionStorage.removeItem('session_token');
+        sessionStorage.removeItem('userInfo');
+        setIsAuthenticated(false);
+        history.push('/login'); // Redirect to login page after logout
+      } else {
+        console.error(result.message);
+      }
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
   };
 
   useEffect(() => {
-    // Call checkSession on component mount
     checkSession();
-  }, []); // Empty dependency array ensures this runs once
+  }, []);
 
   return { isAuthenticated, loading, checkSession, logout };
 };

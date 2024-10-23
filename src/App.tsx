@@ -6,7 +6,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import useTokenValidation from './hooks/useTokenValidation';
 import { useHistory } from "react-router-dom";
-import { useSession } from './hooks/useSession';
+
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -45,17 +45,24 @@ import Dash from './pages/Dash';
 import AddEmployee from './pages/AddEmployee';
 import Customer from './pages/Customer';
 import CustomerList from './pages/CustomerList';
-import TrackerList from './pages/TrackerLIst';
+import TrackerList from './pages/TrackerList';
 import EmployeeList from './pages/EmployeeList';
 import CustomSplashScreen from './components/CustomSplashScreen';
 import ProtectedPage from './pages/ProtectedPage';
+import { useSession } from '../src/hooks/useSession';
 
 
 setupIonicReact();
 
 const App: React.FC = () => {
+  const { isAuthenticated, loading, checkSession, logout } = useSession();
 
 const history = useHistory();
+
+useEffect(() => {
+  checkSession(); // Check the session when the component mounts
+}, [checkSession]);
+
 
   const token = localStorage.getItem('token') || '';
   const [errors, setErrors] = useState<string[]>([]);
@@ -77,23 +84,23 @@ const history = useHistory();
 
   return(
     <IonApp>
-      <IonSplitPane id="dashboard-content">
         { isAppReady ? (
           <IonReactRouter>
             <IonRouterOutlet id="dashboard-content">
-              <Route exact path="/home">
-                <Home />
+              <Route exact path="/">
+                <Login/>
               </Route>
-              <Route exact path="/login" component={Login} />
-              <Route exact path="/register" component={Register}/>
+              <Route exact path="/login">
+                <Login/>
+              </Route>
+              <Route exact path="/register">
+                <Register/>
+              </Route>
               <Route exact path="/tracker">
                 <Tracker />
               </Route>
               <Route exact path="/dashboard">
                 <Dashboard />
-              </Route>
-              <Route exact path="/">
-                <Redirect to="/login" />
               </Route>
               <Route exact path='/addemployee'>
                 <AddEmployee/>
@@ -110,9 +117,6 @@ const history = useHistory();
               <Route exact path='/customerlist'>
                 <CustomerList/>
               </Route>
-              <Route exact path='/protectedpage'>
-                <ProtectedPage/>
-              </Route>
               <Route exact path='/dash'>
                 <Dash/>
               </Route>
@@ -120,7 +124,6 @@ const history = useHistory();
           </IonReactRouter> ) : (
             <CustomSplashScreen/>
           )}
-        </IonSplitPane>
     </IonApp>
   );
 };

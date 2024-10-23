@@ -1,4 +1,4 @@
-import { IonContent, IonPage, IonCard, IonIcon, IonButton, IonApp } from "@ionic/react";
+import { IonContent, IonPage, IonCard, IonIcon, IonButton, IonApp, IonToast } from "@ionic/react";
 import React, { useState } from "react";
 import style from './style/Register.module.css';
 import { personSharp, lockClosedSharp, briefcaseSharp, calendarClearSharp, callSharp } from 'ionicons/icons';
@@ -13,11 +13,13 @@ const Register: React.FC = () => {
     const [password, setPassword] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [role, setRole] = useState("user");
+    const [toast, setToast] = useState(false);
+    const [toastText, setToastText] = useState("")
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
     
-        const response = await fetch('http://localhost/pos-endpoint/register.php', { // Update with your actual path
+        const response = await fetch('https://stanificentglobal.com/api/register.php', { // Update with your actual path
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json', // Indicates JSON format
@@ -169,6 +171,15 @@ const Register: React.FC = () => {
                             </div>
                         </IonCard>
                     </div>
+                </div>
+                <div>
+                    <IonToast
+                    isOpen={toast}
+                    message={toastText}
+                    onDidDismiss={() => setToast(false)}
+                    duration={5000}>
+                        
+                    </IonToast>
                 </div>
             </IonContent>
             <p style={{margin:"auto", marginBottom:".7rem", color:"grey", fontSize:"13px"}}>&copy; 2024 Stanificent Global Technologies LTD. All rights reserved.</p>

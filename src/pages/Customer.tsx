@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { IonPage, IonContent, IonIcon, IonButton, } from "@ionic/react";
+import { IonPage, IonContent, IonIcon, IonButton, IonToast } from "@ionic/react";
 import { personSharp, lockClosedSharp, addCircleSharp, settingsOutline, copySharp, cartSharp, todaySharp, calendarClearSharp, informationCircleOutline, backspace, arrowBack } from 'ionicons/icons';
 import style from './style/AddEmployee.module.css';
 import Header from "../components/Header";
@@ -22,6 +22,8 @@ const Customer: React.FC = () => {
     const [email, setEmail] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [otherInformation, setOtherInformation] = useState('');
+    const [toast, setToast] = useState(false);
+    const [toastText, setToastText] = useState("");
 
     const customerData = {
         firstName: firstName,
@@ -45,7 +47,7 @@ const Customer: React.FC = () => {
         setOtherInformation('');
     }
 
-    const endpoint = 'http://localhost/pos-endpoint/addcustomer.php';
+    const endpoint = 'https://stanificentglobal.com/api/addcustomer.php';
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -62,20 +64,20 @@ const Customer: React.FC = () => {
         
             try {
                 const data = await response.json();
-                alert(data.message);
+                setToastText(data.message);
+                setToast(true)
                 clearFormFields();
                 // Notify the user about the registration status
             } catch (error) {
-                console.error("Error:", error);
-                alert("An error occurred during registration.");
+                setToastText("An error occurred. Try again");
+                setToast(true)
                 clearFormFields();
 
             }
         }else{
             saveDataOffline(customerData, endpoint);
-            alert(
-              "You are offline. Employee data saved locally and will sync when online."
-            );
+            setToastText("You are offline. Employee data saved locally and will sync when online.");
+            setToast(true);
             clearFormFields();
         }
     };
@@ -176,6 +178,15 @@ const Customer: React.FC = () => {
                             </div>
                         </div>
                     </div>
+                    <div>
+                    <IonToast
+                    isOpen={toast}
+                    message={toastText}
+                    onDidDismiss={() => setToast(false)}
+                    duration={5000}>
+                        
+                    </IonToast>
+                </div>
                 </form>
             </div>
 
