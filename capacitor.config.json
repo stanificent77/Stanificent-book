@@ -6,9 +6,7 @@
   "plugins": {
     "SplashScreen": {
       "showSpinner": false,
-      "autoHide": false,
-      "backgroundColor": "#ffffff",
-      "androidScaleType": "CENTER_CROP"
+      "autoHide": false
     }
   },
   "android": {
