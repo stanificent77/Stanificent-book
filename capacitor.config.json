@@ -5,8 +5,11 @@
   "bundledWebRuntime": false,
   "plugins": {
     "SplashScreen": {
+      "launchShowDuration": 0,
+      "backgroundColor": "transparent",
       "showSpinner": false,
-      "autoHide": false
+      "splashFullScreen": false,
+      "splashImmersive": false
     }
   },
   "android": {
@@ -16,9 +19,9 @@
       "keyAlias": "my-key-alias",
       "keyPassword": "Sinachi123."
     },
-    "icon": "resources/StanLogo.png"
+    "icon": "/resources/android/icon.png"
   },
   "ios": {
-    "icon": "resources/StanLogo.png" 
+    "icon": "/resources/ios/icon.png" 
   }
 }

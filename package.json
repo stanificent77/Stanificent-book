@@ -1,82 +1,102 @@
 {
-  "name": "stan-pos",
-  "private": true,
-  "version": "1.0.1",
-  "type": "module",
+  "name": "stanificentBookPoint",
+  "version": "1.0.0",
+  "main": "dist/index.html",
   "scripts": {
+    "start": "nw .",
+    "build": "tsc",
+    "electron:serve": "npm run build && electron .",
+    "electron:make": "npm run build && electron-forge make",
     "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
-    "test.e2e": "cypress run",
-    "test.unit": "vitest",
-    "lint": "eslint",
-    "start": "node wsServer.js"
+    "build:electron": "electron-builder"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "Stanificent BookPoint"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ],
+      "plugins": [
+        [
+          "@electron-forge/plugin-webpack",
+          {
+            "mainConfig": "./webpack.main.config.js",
+            "renderer": {
+              "config": "./webpack.renderer.config.js",
+              "entryPoints": [
+                {
+                  "html": "./public/index.html",
+                  "js": "./src/renderer.tsx",
+                  "name": "main_window"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    }
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.61",
+    "@electron-forge/plugin-webpack": "^6.0.0-beta.61",
+    "@types/react-router-dom": "^5.3.3",
+    "@vitejs/plugin-legacy": "^5.4.3",
+    "@vitejs/plugin-react": "^4.3.3",
+    "electron": "^33.0.2",
+    "esbuild": "^0.24.0",
+    "nw": "^0.93.0",
+    "terser": "^5.36.0",
+    "vite": "^5.4.10"
   },
   "dependencies": {
     "@capacitor/android": "^6.1.2",
-    "@capacitor/app": "6.0.1",
-    "@capacitor/core": "^6.1.2",
-    "@capacitor/haptics": "6.0.1",
-    "@capacitor/keyboard": "6.0.2",
-    "@capacitor/network": "^6.0.2",
-    "@capacitor/splash-screen": "^6.0.2",
-    "@capacitor/status-bar": "6.0.1",
-    "@ionic/react": "^8.0.0",
-    "@ionic/react-router": "^8.0.0",
-    "@types/react-router": "^5.1.20",
-    "@types/react-router-dom": "^5.3.3",
-    "axios": "^1.7.7",
-    "idb": "^8.0.0",
-    "ionicons": "^7.0.0",
-    "react": "^18.2.0",
-    "react-datepicker": "^7.4.0",
-    "react-dom": "^18.2.0",
-    "react-router": "^5.3.4",
-    "react-router-dom": "^5.3.4",
-    "react-text-mask": "^5.5.0",
-    "ws": "^8.0.0"
-  },
-  "devDependencies": {
-    "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "^6.1.2",
-    "@testing-library/dom": ">=7.21.4",
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^14.0.0",
-    "@testing-library/user-event": "^14.4.3",
-    "@types/axios": "^0.9.36",
-    "@types/react": "^18.0.27",
-    "@types/react-dom": "^18.0.10",
-    "@types/react-text-mask": "^5.4.14",
-    "@vitejs/plugin-legacy": "^5.0.0",
-    "@vitejs/plugin-react": "^4.0.1",
-    "cypress": "^13.5.0",
-    "eslint": "^8.35.0",
-    "eslint-plugin-react": "^7.32.2",
-    "jsdom": "^22.1.0",
-    "terser": "^5.4.0",
-    "typescript": "^5.1.6",
-    "vite": "~5.2.0",
-    "vitest": "^0.34.6"
+    "@capacitor/core": "^6.1.2",
+    "@capacitor/electron": "^2.5.0",
+    "@ionic/react": "^8.3.3",
+    "@ionic/react-router": "^8.3.3",
+    "electron-builder": "^25.1.8",
+    "electron-builder-squirrel-windows": "^25.1.8",
+    "history": "^5.3.0",
+    "node-gyp": "^10.2.0",
+    "react": "^18.3.1",
+    "react-datepicker": "^7.5.0",
+    "react-dom": "^18.3.1",
+    "react-router": "5",
+    "react-router-dom": "5"
   },
-  "description": "Point of sales system",
-  "main": "src/main.tsx",
-  "repository": {
-    "type": "git",
-    "url": "https://github/vickman17/possystem.git"
+  "resolutions": {
+    "glob": "^9.0.0"
   },
-  "keywords": [
-    "calculate",
-    "attendance",
-    "POS",
-    "system",
-    "Accounting",
-    "Staff",
-    "Management",
-    "inventory",
-    "control",
-    "admin",
-    "goods"
-  ],
-  "author": "Strive inc",
-  "license": "ISC"
+  "window": {
+    "title": "Stanificent BookPoint",
+    "width": 800,
+    "height": 600,
+    "icon": "resources/android/icon.png",
+    "resizable": true
+  },
+  "web_preferences": {
+    "nodeIntegration": true,
+    "contextIsolation": false,
+    "enableRemoteModule": true
+  }
 }

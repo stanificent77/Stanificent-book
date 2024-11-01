@@ -17,11 +17,15 @@ const TrackerList: React.FC = () => {
   const [loading, setLoading] = useState(true); // State to manage the loading status
   const [selectedTracker, setSelectedTracker] = useState<any>(null); // For storing the clicked tracker
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
-
+  const token = sessionStorage.getItem("session_token")
+;
   useEffect(() => {
     const fetchTrackers = async () => {
       try {
-        const response = await fetch('https://stanificentglobal.com/api/getTracker.php');
+        const response = await fetch('https://stanificentglobal.com/api/getTracker.php', {
+          headers: {
+            "Authorization": `Bearer ${token}`
+      }})
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

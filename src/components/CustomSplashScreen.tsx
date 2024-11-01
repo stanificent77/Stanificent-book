@@ -1,36 +1,28 @@
-import React, { useEffect, useState } from 'react';
-import { IonContent, IonPage } from '@ionic/react';
-import { SplashScreen } from '@capacitor/splash-screen';
-import './CustomSplashScreen.css';
+// src/components/CustomSplashScreen.tsx
+import React, { useEffect } from 'react';
+import './CustomSplashScreen.css'; // Create this CSS file for styles
 
 const CustomSplashScreen: React.FC = () => {
-  const [isVisible, setIsVisible] = useState(true);
 
-  useEffect(() => {
-    const hideSplashScreen = () => {
-      // Set a timer to hide the custom splash screen after the app is ready
-      setTimeout(() => {
-        setIsVisible(false);
-        SplashScreen.hide(); // Hide Capacitor's default splash screen if needed
-      }, 3000); // Adjust the duration to match your GIF length
-    };
+  const splash = "/assets/splash.gif";
 
-    hideSplashScreen();
-  }, []);
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            // Hide the splash screen after a delay
+            const splashElement = document.getElementById('custom-splash-screen');
+            if (splashElement) {
+                splashElement.style.display = 'none';
+            }
+        }, 5000); // Set time for how long the GIF should show
 
-  if (!isVisible) {
-    return null;
-  }
+        return () => clearTimeout(timer); // Cleanup the timer
+    }, []);
 
-  return (
-    <IonPage>
-      <IonContent className="custom-splash-content">
-        <div className='gif-cont'>
-          <img src="resources/splash.gif" alt="Splash oooo" className="splash-gif" />
+    return (
+        <div id="custom-splash-screen" className="splash-screen">
+            <img src={splash} alt="Splash" />
         </div>
-      </IonContent>
-    </IonPage>
-  );
+    );
 };
 
 export default CustomSplashScreen;

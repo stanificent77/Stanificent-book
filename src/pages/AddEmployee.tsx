@@ -8,27 +8,22 @@ import { addIcons } from "ionicons";
 import DatePicker from 'react-datepicker';
 import { useSession } from "../hooks/useSession";
 import 'react-datepicker/dist/react-datepicker.css';
-import MaskedInput from 'react-text-mask';
 import useUserInfo from "../hooks/useUserInfo";
 import useOfflineSync  from '../hooks/useOfflineSync';
 import BackButton from "../components/BackButton";
 import useTokenValidation from "../hooks/useTokenValidation";
+import "react-datepicker/dist/react-datepicker.css";
+
 
 const AddEmployee: React.FC = () => {
 
     const { isAuthenticated, loading, checkSession, logout } = useSession();
 
-    useEffect(() => {
-      checkSession(); // Check the session when the component mounts
-    }, [checkSession]);
-
-    const token = localStorage.getItem('token') || '';
+    const token = sessionStorage.getItem('session_token') || '';
     const [errors, setErrors] = useState<string[]>([]);
     const [toast, setToast] = useState(false);
     const [toastText, setToastText] = useState("");
   
-  
-    useTokenValidation(token, setErrors);
 
     const { userName, employeeTag } = useUserInfo();
     const { saveDataOffline } = useOfflineSync();
@@ -79,6 +74,7 @@ const AddEmployee: React.FC = () => {
             const response = await fetch(endpoint, {
               method: "POST",
               headers: {
+                "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json",
               },
               body: JSON.stringify(employeeData),

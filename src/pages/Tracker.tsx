@@ -13,6 +13,7 @@ const Tracker: React.FC = () => {
     const { saveDataOffline } = useOfflineSync();
     const [isOffline, setIsOffline] = useState(false);
     const [popText, setPopText] = useState("");
+    const token = sessionStorage.getItem("session_token")
 
     const [toast, setToast] = useState(false);
     const [toastText, setToastText] = useState("");
@@ -73,6 +74,7 @@ const Tracker: React.FC = () => {
                 const response = await fetch(endpoint, {
                     method: "POST",
                     headers: {
+                        "Authorization": `Bearer ${token}`,
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify(formData)

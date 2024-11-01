@@ -15,6 +15,7 @@ const Register: React.FC = () => {
     const [role, setRole] = useState("user");
     const [toast, setToast] = useState(false);
     const [toastText, setToastText] = useState("")
+    const token = sessionStorage.getItem("session_token");
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -22,6 +23,7 @@ const Register: React.FC = () => {
         const response = await fetch('https://stanificentglobal.com/api/register.php', { // Update with your actual path
             method: 'POST',
             headers: {
+                "Authorization": `Bearer ${token}`,
                 'Content-Type': 'application/json', // Indicates JSON format
             },
             body: JSON.stringify({

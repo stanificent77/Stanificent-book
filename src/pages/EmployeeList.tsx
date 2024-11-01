@@ -18,15 +18,22 @@ import {
 } from '@ionic/react';
 import { closeCircle } from 'ionicons/icons';
 import BackButton from '../components/BackButton';
-import axios from 'axios';
 import style from '../pages/style/EmployeeList.module.css';
+import isAdmin from '../hooks/useUserRole';
+import useUserRole from '../hooks/useUserRole';
 
-// Define the type for Employee
+
 interface Employee {
   employee_tag: string;
   username: string;
   email: string;
   phoneNumber: string;
+}
+
+interface ApiResponse {
+  status: string;
+  data: Employee[];
+  message?: string;
 }
 
 const EmployeeList: React.FC = () => {
@@ -37,12 +44,37 @@ const EmployeeList: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editForm, setEditForm] = useState({ username: '', email: '', phoneNumber: '', password: '' });
   const [loader, setLoader] = useState(false);
+  const userRole = sessionStorage.getItem("userRole");
+
+  const token = sessionStorage.getItem('session_token');
 
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const response = await axios.get<Employee[]>('https://stanificentglobal.com/api/getEmployees.php');
-        setEmployees(response.data);
+        const response = await fetch('https://stanificentglobal.com/api/getEmployees.php', {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+          const data: ApiResponse = await response.json();
+          if (data.status === 'success' && Array.isArray(data.data)) {
+            setEmployees(data.data);
+          } else {
+            console.error('API Error:', data.message || 'Unknown error');
+          }
+        } else {
+          const errorText = await response.text();
+          console.error('Expected JSON but received:', errorText);
+        }
       } catch (error) {
         console.error('Error fetching employees:', error);
       } finally {
@@ -51,14 +83,8 @@ const EmployeeList: React.FC = () => {
     };
 
     fetchEmployees();
-  }, []);
+  }, [token]);
 
-  const filteredEmployees = employees.filter(employee =>
-    employee.employee_tag.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    employee.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    employee.email.includes(searchTerm) ||
-    employee.phoneNumber.includes(searchTerm)
-  );
 
   const openModal = (employee: Employee) => {
     setSelectedEmployee(employee);
@@ -71,6 +97,14 @@ const EmployeeList: React.FC = () => {
     setIsModalOpen(true);
   };
 
+  const viewInfo = () => {
+    if(!isAdmin){
+
+    }else{
+
+    }
+  }
+
   const closeModal = () => {
     setSelectedEmployee(null);
     setIsModalOpen(false);
@@ -82,30 +116,37 @@ const EmployeeList: React.FC = () => {
   };
 
   const saveChanges = async () => {
+    setLoader(true);
     if (!selectedEmployee) return;
 
     const updatedEmployee = {
-      employees_tag: selectedEmployee.employee_tag,
-      username: editForm.username,
-      email: editForm.email,
-      phoneNumber: editForm.phoneNumber,
-      password: editForm.password || '',
+        employees_tag: selectedEmployee.employee_tag, // Fix typo here if it was 'employees_tag'
+        username: editForm.username,
+        email: editForm.email,
+        phoneNumber: editForm.phoneNumber,
+        password: editForm.password || '',
     };
 
     try {
-      const response = await axios.put('https://stanificentglobal.com/api/updateEmployee.php', updatedEmployee);
-      const updatedData = response.data;
-      console.log('Employee updated:', updatedData);
+        const response = await fetch('https://stanificentglobal.com/api/updateEmployee.php', {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedEmployee),
+        });
 
-      const updatedList = employees.map(employee =>
-        employee.employee_tag === selectedEmployee.employee_tag ? { ...employee, ...editForm } : employee
-      );
-      setEmployees(updatedList);
-      closeModal();
+        console.log("Updated successful");
+        closeModal();
     } catch (error) {
-      console.error('Error saving employee changes:', error);
+        console.error('Error saving employee changes:', error);
+    } finally {
+        setLoader(false);
     }
-  };
+};
+
+
 
   return (
     <IonPage>
@@ -135,9 +176,9 @@ const EmployeeList: React.FC = () => {
           </IonList>
         ) : (
           <IonList>
-            {filteredEmployees.length > 0 ? (
-              filteredEmployees.map((employee) => (
-                <IonItem key={employee.employee_tag} button onClick={() => openModal(employee)}>
+            {employees.length > 0 ? (
+              employees.map((employee) => (
+                <IonItem key={employee.employee_tag} button onClick={()=> {openModal(employee)}}>
                   <IonLabel>
                     <h2 style={{ fontWeight: 'bolder' }}>{employee.username}</h2>
                     <p>Employee Tag: {employee.employee_tag}</p>
@@ -154,84 +195,68 @@ const EmployeeList: React.FC = () => {
           </IonList>
         )}
 
-        {/* Modal for editing employee */}
-        <IonModal style={{border:"0px solid black"}} isOpen={isModalOpen} onDidDismiss={closeModal}>
+        <IonModal isOpen={isModalOpen} onDidDismiss={closeModal}>
           <IonCard>
             <IonButton fill="clear" onClick={closeModal} className="close-btn" style={{ float: 'right' }}>
               <IonIcon icon={closeCircle} />
             </IonButton>
             {selectedEmployee && (
               <IonGrid>
-                <IonRow style={{"--border":"0px solid black"}}>
-                  <IonCol style={{border:"0px solid black"}}>
+                <IonRow>
+                  <IonCol>
                     <h2>Edit Employee</h2>
                     <div>
-                      <div>
-                        <label className={style.lab}>Username:</label>
-                      </div>
-                      <div>
-                        <input
-className={style.input}
-                          name="username"
-                          value={editForm.username}
-                          onChange={handleEditChange}
-                          placeholder="Username"
-                        />
-                      </div>
+                      <label className={style.lab}>Username:</label>
+                      <input
+                        className={style.input}
+                        name="username"
+                        value={editForm.username}
+                        onChange={handleEditChange}
+                        placeholder="Username"
+                      />
                     </div>
                     <div>
-                      <div>
-                        <label className={style.lab}>Email:</label>
-                      </div>
-                      <div>
-                        <input
-className={style.input}
-                          name="email"
-                          value={editForm.email}
-                          onChange={handleEditChange}
-                          placeholder="Email"
-                        />
-                      </div>
+                      <label className={style.lab}>Email:</label>
+                      <input
+                        className={style.input}
+                        name="email"
+                        value={editForm.email}
+                        onChange={handleEditChange}
+                        placeholder="Email"
+                      />
                     </div>
                     <div>
-                      <div>
-                        <label className={style.lab}>Phone Number:</label>
-                      </div>
-                      <div>
-                        <input
-className={style.input}
-                          name="phoneNumber"
-                          value={editForm.phoneNumber}
-                          onChange={handleEditChange}
-                          placeholder="Phone Number"
-                        />
-                      </div>
+                      <label className={style.lab}>Phone Number:</label>
+                      <input
+                        className={style.input}
+                        name="phoneNumber"
+                        value={editForm.phoneNumber}
+                        onChange={handleEditChange}
+                        placeholder="Phone Number"
+                      />
                     </div>
                     <div>
-                      <div>
-                        <label className={style.lab}>Password:</label>
-                      </div>
-                      <div>
-                        <input
-className={style.input}
-                          name="password"
-                          type="password"
-                          value={editForm.password}
-                          onChange={handleEditChange} // Use standard onChange
-                          placeholder="Leave blank to keep current password"
-                        />
-                      </div>
+                      <label className={style.lab}>Password:</label>
+                      <input
+                        className={style.input}
+                        name="password"
+                        type="password"
+                        value={editForm.password}
+                        onChange={handleEditChange}
+                        placeholder="Leave blank to keep current password"
+                      />
                     </div>
                   </IonCol>
                 </IonRow>
               </IonGrid>
             )}
-            <IonButton id='load' onClick={saveChanges}>Save Changes</IonButton>
-            <div>
-              <IonLoading className="loading" trigger="load" message="Updating..." spinner="crescent" duration={4000}/>
-            </div>
+            <IonButton expand="full" onClick={saveChanges}>
+              Save Changes
+            </IonButton>
           </IonCard>
         </IonModal>
+
+        <IonLoading isOpen={loader} message={'Please wait...'} />
       </IonContent>
     </IonPage>
   );

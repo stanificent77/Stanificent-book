@@ -9,6 +9,7 @@ const CustomerList: React.FC = () => {
 
 
     const { userName, employeeTag } = useUserInfo();
+    const token = sessionStorage.getItem('session_token') || '';
 
 
   const [customers, setCustomers] = useState<any[]>([]); // Specify the type as an array of any
@@ -20,7 +21,12 @@ const CustomerList: React.FC = () => {
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
-        const response = await fetch('https://stanificentglobal.com/api/getCustomers.php');
+        const response = await fetch('https://stanificentglobal.com/api/getCustomers.php', {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${token}`
+          },
+        });
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

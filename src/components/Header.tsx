@@ -8,7 +8,7 @@ import { useHistory } from "react-router-dom";
 const Header: React.FC = () => {
   const { userName, employeeTag, userRole } = useUserInfo(); 
   const [menuIsOpen, setMenuIsOpen] = useState(false);
-  const history = useHistory(); // Hook for navigating
+  const navigate = useHistory(); // Hook for navigating
 
   const handleMenuOpen = () => {
     setMenuIsOpen(true);
@@ -19,7 +19,7 @@ const Header: React.FC = () => {
   };
 
   const handleNavigation = (path: string) => {
-    history.push(path); // Handle navigation
+    navigate(path); // Handle navigation
   };
 
   return (

@@ -10,12 +10,26 @@ import useTokenValidation from '../hooks/useTokenValidation';
 import Logout from "../components/Logout";
 
 const Dashboard: React.FC = () => {
-  const history = useHistory();
+  const navigate = useHistory();
+const {checkSession} = useSession();
+  if(navigator.onLine){
+  useEffect(() => {
+    checkSession(); // Check the session when the component mounts
+  }, [checkSession]);
+  }
 
   const [menuIsOpen, setMenuIsOpen] = useState(false);
   const [toast, setToast] = useState(false);
   const [toastText, setToastText] = useState("")
 
+  const token = localStorage.getItem('token') || '';
+  const [errors, setErrors] = useState<string[]>([]);
+
+if(navigator.onLine){
+  useTokenValidation(token, setErrors);
+}else{
+  console.log("Offline!. Token can't be validate while online")
+}
 
 
 
@@ -29,11 +43,11 @@ const Dashboard: React.FC = () => {
 
   // This function handles navigation when the user clicks on a menu item
   const handleNavigation = (path: string) => {
-    history.push(path);
+    navigate(path);
   };
 
-  const { userName, employeeTag } = useUserInfo(); 
-
+  const { userName, employeeTag } = useUserInfo();
+  const userRole = JSON.parse(sessionStorage.getItem("userRole") || '""');
   return (
     <IonPage id="dashboard-content">
       <SideNav 
@@ -96,12 +110,12 @@ const Dashboard: React.FC = () => {
           <div className={style.contentBut}>
             <IonButton className={style.but} routerLink="/tracker">Tracker database</IonButton>
             <IonButton className={style.but} routerLink="/customer">Customer database</IonButton>
-            <IonButton className={style.but} routerLink="/addemployee">Add employees</IonButton>
+           {userRole === "admin" ? ( <IonButton className={style.but} routerLink="/addemployee">Add employees</IonButton>) : "" }
           </div>
           <div className={style.contentBut}>
             <IonButton className={style.but} routerLink="/trackerlist">Tracker List</IonButton>
             <IonButton className={style.but} routerLink="/customerlist">Customer List</IonButton>
-            <IonButton className={style.but} routerLink="/employeelist">Employees List</IonButton>
+           {userRole === "admin" ? (<IonButton className={style.but} routerLink="/employeelist">Employees List</IonButton>) : '' }
           </div>
           <div>
             <Logout />
