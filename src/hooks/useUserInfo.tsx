@@ -27,8 +27,6 @@ const useUserInfo = () => {
     try {
       const storedUserInfo = localStorage.getItem('userInfo') || sessionStorage.getItem('userInfo');
       
-      console.log("Stored User Info:", storedUserInfo); // Debugging line
-
       if (storedUserInfo) {
         // Ensure storedUserInfo is a string
         const userInfoData = JSON.parse(storedUserInfo);

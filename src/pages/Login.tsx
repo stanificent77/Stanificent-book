@@ -1,4 +1,4 @@
-import { IonContent, IonPage, IonIcon, IonToggle, IonCard, IonLoading, IonToast } from "@ionic/react"
+import { IonContent, IonPage, IonIcon, IonToggle, IonCard, IonLoading, IonToast } from "@ionic/react";
 import React, { useState } from "react";
 import { personSharp, lockClosedSharp } from 'ionicons/icons';
 import style from "./style/Login.module.css";
@@ -20,7 +20,7 @@ interface UserInfo {
 }
 
 const Login: React.FC = () => {
-    const navigate = useHistory();
+    const history =  useHistory();
     const { isAuthenticated, loading, logout } = useSession();
     const [loginId, setLoginId] = useState("");
     const [password, setPassword] = useState("");
@@ -28,7 +28,7 @@ const Login: React.FC = () => {
     const [toast, setToast] = useState(false);
     const [toastText, setToastText] = useState("");
     const [load, setLoad] = useState<boolean>(false);
-    const apiUrl = "https://stanificentglobal.com/api/login.php";
+    const apiUrl = "http://localhost/pos-endpoint/login.php";
 
     const hashPassword = async (password: string) => {
         const encoder = new TextEncoder();
@@ -63,12 +63,15 @@ const Login: React.FC = () => {
                         phoneNumber: data.user.phoneNumber,
                         role: data.user.role,
                         hire_date: data.user.hire_date,
-                        position: data.user.position
+                        position: data.user.position,
                     };
 
+                    // Store user info and role in session storage
                     sessionStorage.setItem("session_token", data.session_token);
                     sessionStorage.setItem("userInfo", JSON.stringify(userInfo));
                     sessionStorage.setItem("userRole", JSON.stringify(userInfo.role));
+                    sessionStorage.setItem("privileges", JSON.stringify(data.user.privileges));
+
 
                     if (keepLoggedIn) {
                         const storedUsers = localStorage.getItem("user_credentials");
@@ -89,7 +92,7 @@ const Login: React.FC = () => {
 
                     setToastText("Login successful");
                     setToast(true);
-                    navigate.push("/dashboard");
+                    history.push("/dashboard");
                 } else {
                     setToastText(data.error || "Login failed");
                     setToast(true);
@@ -117,10 +120,10 @@ const Login: React.FC = () => {
                 if (savedInfo) {
                     sessionStorage.setItem("userInfo", savedInfo);
                 }
-                
+
                 setToastText("Login successful (offline)");
                 setToast(true);
-                navigate("/dashboard");
+                history.push("/dashboard");
                 setLoad(false);
             } else {
                 setToastText("Incorrect password. Please try again.");
@@ -186,13 +189,13 @@ const Login: React.FC = () => {
                                     <div>
                                         <button
                                             style={{ width: "100%", marginTop: "2.5rem", background: "#443d81", padding: "12px", borderRadius: "5px", color: "white" }}
-                                            id="loadered"
+                                            id="load"
                                         >
                                             Login
                                         </button>
                                     </div>
                                     <div>
-                                        <IonLoading className="loading" isOpen={load} trigger="loadered" message="Logging in" duration={5000} />
+                                        <IonLoading className="loading" isOpen={load} trigger="load" message="Logging in" duration={5000} />
                                     </div>
                                 </form>
                             </div>

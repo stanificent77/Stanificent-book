@@ -20,7 +20,7 @@ const Register: React.FC = () => {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
     
-        const response = await fetch('https://stanificentglobal.com/api/register.php', { // Update with your actual path
+        const response = await fetch('http://localhost/pos-endpoint/register.php', { // Update with your actual path
             method: 'POST',
             headers: {
                 "Authorization": `Bearer ${token}`,

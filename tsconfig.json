@@ -8,7 +8,8 @@
     "esModuleInterop": true ,
     "jsx": "react-jsx" ,     // Allows import/export syntax interoperability
     "noImplicitAny": false,
-    "types": ["vite/client"]
+    "types": ["vite/client"],
+    "lib": ["dom", "esnext"],
   },
   "include": ["src/**/*", "node_modules/@ionic/react/**/*"]             // Specifies files to be compiled
 }

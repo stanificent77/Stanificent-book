@@ -1,16 +1,19 @@
 import React from 'react';
 import { IonMenu, IonContent, IonHeader, IonItem } from '@ionic/react';
 import menu from './SideNav.module.css';
+import { useHistory } from 'react-router-dom';
 
 interface MenuProps {
   contentId: string;
   onNavigate: (path: string) => void; // Add onNavigate for navigation
-  onMenuOpen?: () => void; // Optional prop for menu open
+  onMenuOpen?: () => void; // Optional prop for menu openhi
   onMenuClose?: () => void; // Optional prop for menu close
   isAdmin?: boolean; // Prop to check if the user is an admin
 }
 
 const SideNav: React.FC<MenuProps> = ({ contentId, onNavigate, onMenuOpen, onMenuClose, isAdmin }) => {
+
+const history = useHistory();
   return (
     <IonMenu 
       contentId={contentId}
@@ -22,22 +25,22 @@ const SideNav: React.FC<MenuProps> = ({ contentId, onNavigate, onMenuOpen, onMen
       </IonHeader>
       <IonContent className={menu.menulist} style={{ height: "100vh", paddingTop: "2rem" }}>
         <div className={menu.menuItem}>
-          <IonItem button onClick={() => onNavigate('/customer')}>
+          <IonItem button onClick={() => history.push('/customer')}>
             Add Customer
           </IonItem>
         </div>
         <div className={menu.menuItem}>
-          <IonItem button onClick={() => onNavigate('/add-tracker')}>
+          <IonItem button onClick={() => history.push('/add-tracker')}>
             Add Tracker
           </IonItem>
         </div>
         <div className={menu.menuItem}>
-          <IonItem button onClick={() => onNavigate('/customers-list')}>
+          <IonItem button onClick={() => history.push('/customers-list')}>
             Customers List
           </IonItem>
         </div>
         <div className={menu.menuItem}>
-          <IonItem button onClick={() => onNavigate('/trackers-list')}>
+          <IonItem button onClick={() => history.push('/trackers-list')}>
             Trackers List
           </IonItem>
         </div>
@@ -47,12 +50,12 @@ const SideNav: React.FC<MenuProps> = ({ contentId, onNavigate, onMenuOpen, onMen
           <>
             <div className={menu.subhead}>ADMIN</div>
             <div className={menu.menuItem}>
-              <IonItem button onClick={() => onNavigate('/addemployee')}>
+              <IonItem button onClick={() => history.push('/addemployee')}>
                 Add Employee
               </IonItem>
             </div>
             <div className={menu.menuItem}>
-              <IonItem button onClick={() => onNavigate('/employeelist')}>
+              <IonItem button onClick={() => history.push('/employeelist')}>
                 Employees List
               </IonItem>
             </div>

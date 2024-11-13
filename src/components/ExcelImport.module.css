@@ -1,0 +1,21 @@
+.page{
+    border: 0px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.tableName{
+    border: 1px solid grey;
+    outline: none;
+    padding: .6rem;
+    border-radius: 4px;
+}
+
+.button{
+    border: 1px solid black;
+    background: #443d81;
+    color: white;
+    border-radius: 4px;
+    padding: .7rem;
+}

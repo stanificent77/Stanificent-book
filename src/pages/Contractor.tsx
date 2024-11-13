@@ -8,46 +8,44 @@ import useOfflineSync  from '../hooks/useOfflineSync';
 import BackButton from "../components/BackButton";
 
 
-const Customer: React.FC = () => {
+const Contractor: React.FC = () => {
 
     const { saveDataOffline } = useOfflineSync();
 
     const { userName, employeeTag } = useUserInfo();
 
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
+    const [personalName, setPersonalName] = useState('');
     const [companyName, setCompanyName] = useState('');
     const [address, setAddress] = useState('');
-    const [customerCategory, setCustomerCategory] = useState('');
+    const [product, setProduct] = useState('');
     const [email, setEmail] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
-    const [otherInformation, setOtherInformation] = useState('');
-    const [toast, setToast] = useState(false);
-    const [toastText, setToastText] = useState("");
+    const [otherNumber, setOtherNumber] = useState('');
+    const [toast, setToast] = useState<boolean>(false);
+    const [toastText, setToastText] = useState('');
+    const token = sessionStorage.getItem('session_token');
 
     const customerData = {
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
+        personalName: personalName,
         companyName: companyName,
-        address: address,
-        customerCategory: customerCategory,
+        email: email,
         phoneNumber: phoneNumber,
-        otherInformation: otherInformation
+        address: address,
+        product: product,
+        otherNumber: otherNumber,
     }
 
     const clearFormFields = () => {
-        setFirstName('');
-        setLastName('');
-        setEmail('');
+        setPersonalName('');
         setCompanyName('');
+        setEmail('');
         setAddress('');
-        setCustomerCategory('');
+        setProduct('');
         setPhoneNumber('');
-        setOtherInformation('');
+        setOtherNumber('');
     }
 
-    const endpoint = 'http://localhost/pos-endpoint/addcustomer.php';
+    const endpoint = 'http://localhost/pos-endpoint/addcontractor.php';
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -57,7 +55,8 @@ const Customer: React.FC = () => {
             const response = await fetch(endpoint, { // Update with your actual path
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json', // Indicates JSON format
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`, // Indicates JSON format
                 },
                 body: JSON.stringify(customerData),
             });
@@ -76,7 +75,7 @@ const Customer: React.FC = () => {
             }
         }else{
             saveDataOffline(customerData, endpoint);
-            setToastText("You are offline. Employee data saved locally and will sync when online.");
+            setToastText("You are offline. supplier data saved locally and will sync when online.");
             setToast(true);
             clearFormFields();
         }
@@ -89,11 +88,11 @@ const Customer: React.FC = () => {
         <IonContent className={style.container}>
             <div className={style.topic}>
                 <div className={style.employee}>
-                    <div className={style.new}>New Customer</div>
-                    <div className={style.createnew}>Create new customer</div>
+                    <div className={style.new}>New Freelancer / Contractor</div>
+                    <div className={style.createnew}>Add new contractor</div>
                 </div>
                 <div>
-                    <IonButton className={style.employeebut} routerLink="/customerlist"> <IonIcon icon={arrowBack} /> Customer List</IonButton>
+                    <IonButton className={style.employeebut} routerLink="/contractorlist"> <IonIcon icon={arrowBack} /> Contractor List</IonButton>
                 </div>
             </div>
 
@@ -102,40 +101,21 @@ const Customer: React.FC = () => {
                     <div className={style.cont}>
                         <div style={{display:"flex", alignItems:"center", borderBottom:"1px solid grey", paddingBlock:".5rem"}}>
                             <IonIcon icon={informationCircleOutline}/>
-                            Customer Information
+                            Contractor Information
                         </div>
 
                         <div className={style.line}>
                             <div className={style.inputs}>
                                 <div className={style.head}>
-                                    First Name
+                                    Personal name
                                 </div>
                                 <div>
-                                    <input type="text" value={firstName} onChange={e => setFirstName(e.target.value)} required />
+                                    <input type="text" value={personalName} onChange={e => setPersonalName(e.target.value)} required />
                                 </div>
                             </div>
                             <div className={style.inputs}>
                                 <div className={style.head}>
-                                    Last Name
-                                </div>
-                                <div>
-                                    <input type="text" value={lastName} onChange={e => setLastName(e.target.value)} required/>
-                                </div>
-                            </div>
-                            <div className={style.inputs}>
-                                <div className={style.head}>
-                                    Email
-                                </div>
-                                <div>
-                                    <input type="text" value={email} onChange={e => setEmail(e.target.value)} required/>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className={style.line}>
-                            <div className={style.inputs}>
-                                <div className={style.head}>
-                                    Company Name
+                                    Company name
                                 </div>
                                 <div>
                                     <input type="text" value={companyName} onChange={e => setCompanyName(e.target.value)} required/>
@@ -143,38 +123,49 @@ const Customer: React.FC = () => {
                             </div>
                             <div className={style.inputs}>
                                 <div className={style.head}>
-                                    Phone Number
+                                    Phone number
                                 </div>
                                 <div>
                                     <input type="text" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} required/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className={style.line}>
+                            <div className={style.inputs}>
+                                <div className={style.head}>
+                                    Other number
+                                </div>
+                                <div>
+                                    <input type="text" value={otherNumber} onChange={e => setOtherNumber(e.target.value)} required/>
                                 </div>
                             </div>
                             <div className={style.inputs}>
                                 <div className={style.head}>
                                     Address
                                 </div>
-                                <input type="text" value={address} onChange={e => setAddress(e.target.value)} required/>
+                                <div>
+                                    <input type="text" value={address} onChange={e => setAddress(e.target.value)} required/>
+                                </div>
+                            </div>
+                            <div className={style.inputs}>
+                                <div className={style.head}>
+                                    Email
+                                </div>
+                                <input type="text" value={email} onChange={e => setEmail(e.target.value)} required/>
                             </div>
                         </div>
                         <div className={style.line}>
                             <div className={style.inputs}>
                                 <div className={style.head}>
-                                    Customer Category
+                                    Products / Service offering
                                 </div>
                                 <div>
-                                    <input type="text" value={customerCategory} onChange={e => setCustomerCategory(e.target.value)} required/>
+                                    <input type="text" value={product} onChange={e => setProduct(e.target.value)} required/>
                                 </div>
                             </div>
                             <div className={style.inputs}>
-                                <div className={style.head}>
-                                    Other Information
-                                </div>
-                                <div>
-                                    <input type="text" value={otherInformation} onChange={e => setOtherInformation(e.target.value)} required/>
-                                </div>
-                            </div>
-                            <div className={style.inputs}>
-                                <IonButton className={style.button} type="submit"> <IonIcon icon={addCircleSharp} /> Add Customer</IonButton>
+                                <IonButton className={style.button} type="submit"> <IonIcon icon={addCircleSharp} /> Add Contractor</IonButton>
                             </div>
                         </div>
                     </div>
@@ -195,4 +186,4 @@ const Customer: React.FC = () => {
     )
 }
 
-export default Customer;
+export default Contractor;

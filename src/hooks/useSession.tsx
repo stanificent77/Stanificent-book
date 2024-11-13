@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import useUserInfo from '../hooks/useUserInfo';
-import {useHistory}  from 'react-router-dom';
+import {  useHistory } from 'react-router-dom';
 
 interface UseSessionReturn {
   isAuthenticated: boolean;
@@ -13,7 +13,7 @@ export const useSession = (): UseSessionReturn => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const { employeeTag } = useUserInfo(); // Assuming this hook provides user information
-  const navigate = useHistory();
+  const history =  useHistory();
 
   const checkSession = async () => {
     setLoading(true);
@@ -26,8 +26,6 @@ export const useSession = (): UseSessionReturn => {
         const storedUserInfo = localStorage.getItem('user_info');
         if (storedUserInfo) {
           const userInfoData = JSON.parse(storedUserInfo);
-          // Assuming you have a way to set user info in your state
-          // For example: setUserInfo(userInfoData);
           setIsAuthenticated(true); // Offline login successful
           console.log("User logged in offline:", userInfoData);
         } else {
@@ -44,55 +42,54 @@ export const useSession = (): UseSessionReturn => {
       return;
     }
 
-  if(navigator.onLine){
-    try {
-      const response = await fetch('https://stanificentglobal.com/api/verify_session.php', {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${sessionToken}`,
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-      });
+    if (navigator.onLine) {
+      try {
+        const response = await fetch('http://localhost/pos-endpoint/verify_session.php', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${sessionToken}`,
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+        });
 
-      if (!response.ok) {
-        console.error('Failed to verify session, logging out.', response.statusText);
-        setIsAuthenticated(false);
-        await logout();
-      } else {
-        const data = await response.json();
-        if (data.success) {
-          setIsAuthenticated(true); // Session is valid
-        } else {
-          console.warn('Session verification failed:', data.message);
+        if (!response.ok) {
+          console.error('Failed to verify session, logging out.', response.statusText);
           setIsAuthenticated(false);
           await logout();
+        } else {
+          const data = await response.json();
+          if (data.success) {
+            setIsAuthenticated(true); // Session is valid
+          } else {
+            console.warn('Session verification failed:', data.message);
+            setIsAuthenticated(false);
+            await logout();
+          }
         }
+      } catch (error) {
+        console.error('Error verifying session:', error);
+        setIsAuthenticated(false);
+        await logout();
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('Error verifying session:', error);
-      setIsAuthenticated(false);
-      await logout();
-    } finally {
-      setLoading(false);
     }
-  }
   };
 
   const logout = async (): Promise<boolean> => {
     const token = sessionStorage.getItem("session_token");
 
     if (!token) {
-      console.warn('No employee tag found, skipping logout request.');
+      console.warn('No session token found, skipping logout request.');
       sessionStorage.clear();
       setIsAuthenticated(false);
-      navigate.push('/login'); // Redirect to login
+      history.push('/login'); // Redirect to login
       return false;
     }
 
-    
     try {
-      const response = await fetch('https://stanificentglobal.com/api/logout.php', {
+      const response = await fetch('http://localhost/pos-endpoint/logout.php', {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -112,13 +109,13 @@ export const useSession = (): UseSessionReturn => {
         console.log('Logout successful:', result.message);
         sessionStorage.clear();
         setIsAuthenticated(false);
-        navigate('/login'); // Redirect to login
+        history.push('/login'); // Redirect to login
         return true;
       } else {
         console.warn('Logout unsuccessful:', result.message);
         sessionStorage.clear();
         setIsAuthenticated(false);
-        navigate('/login'); // Redirect to login
+        history.push('/login'); // Redirect to login
         return false;
       }
     } catch (error) {

@@ -139,3 +139,16 @@ input:focus{
         font-weight: 100;
     }
 }
+
+
+.privileges{
+    display: block;
+    border: 0px solid black;
+    padding: 12px;
+}
+
+.privilegeHead{
+    text-align: center;
+    font-size: 19px;
+    font-weight: 600;
+}

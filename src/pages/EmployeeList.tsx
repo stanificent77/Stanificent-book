@@ -15,13 +15,17 @@ import {
   IonIcon,
   IonCard,
   IonLoading,
+  IonFab,
+  IonFabButton,
+  IonFabList
 } from '@ionic/react';
-import { closeCircle } from 'ionicons/icons';
+import { closeCircle, download, fileTrayFull, documentText } from 'ionicons/icons';
 import BackButton from '../components/BackButton';
 import style from '../pages/style/EmployeeList.module.css';
-import isAdmin from '../hooks/useUserRole';
-import useUserRole from '../hooks/useUserRole';
-
+import { jsPDF } from 'jspdf';
+import * as XLSX from 'xlsx';
+import { hasPrivilege } from '../utils/HasPrivilege';
+import useUserInfo from "../hooks/useUserInfo";
 
 interface Employee {
   employee_tag: string;
@@ -45,13 +49,16 @@ const EmployeeList: React.FC = () => {
   const [editForm, setEditForm] = useState({ username: '', email: '', phoneNumber: '', password: '' });
   const [loader, setLoader] = useState(false);
   const userRole = sessionStorage.getItem("userRole");
-
   const token = sessionStorage.getItem('session_token');
+  const { userName, employeeTag } = useUserInfo();
+  const canExportToPDF = hasPrivilege('EXPORT', 'Contractor list', employeeTag);
+  const canExportToExcel = hasPrivilege('EXPORT', 'Contractor list', employeeTag);
+  const canEdit = hasPrivilege("EDIT", "Employee List", employeeTag)
 
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const response = await fetch('https://stanificentglobal.com/api/getEmployees.php', {
+        const response = await fetch('http://localhost/pos-endpoint/getEmployees.php', {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -85,7 +92,6 @@ const EmployeeList: React.FC = () => {
     fetchEmployees();
   }, [token]);
 
-
   const openModal = (employee: Employee) => {
     setSelectedEmployee(employee);
     setEditForm({
@@ -96,14 +102,6 @@ const EmployeeList: React.FC = () => {
     });
     setIsModalOpen(true);
   };
-
-  const viewInfo = () => {
-    if(!isAdmin){
-
-    }else{
-
-    }
-  }
 
   const closeModal = () => {
     setSelectedEmployee(null);
@@ -120,7 +118,7 @@ const EmployeeList: React.FC = () => {
     if (!selectedEmployee) return;
 
     const updatedEmployee = {
-        employees_tag: selectedEmployee.employee_tag, // Fix typo here if it was 'employees_tag'
+        employees_tag: selectedEmployee.employee_tag,
         username: editForm.username,
         email: editForm.email,
         phoneNumber: editForm.phoneNumber,
@@ -128,7 +126,7 @@ const EmployeeList: React.FC = () => {
     };
 
     try {
-        const response = await fetch('https://stanificentglobal.com/api/updateEmployee.php', {
+        const response = await fetch('http://localhost/pos-endpoint/updateEmployee.php', {
             method: 'PUT',
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -144,9 +142,29 @@ const EmployeeList: React.FC = () => {
     } finally {
         setLoader(false);
     }
-};
+  };
 
+  // Export to PDF
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    doc.text("Employee List", 14, 20);
+    doc.setFontSize(12);
 
+    employees.forEach((employee, index) => {
+      doc.text(`${index + 1}. ${employee.username} - ${employee.phoneNumber} - ${employee.email}`, 14, 30 + (index * 10));
+    });
+
+    doc.save('employee-list.pdf');
+  };
+
+  // Export to Excel
+  const exportToExcel = () => {
+    const ws = XLSX.utils.json_to_sheet(employees);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Employees');
+    XLSX.writeFile(wb, 'employee-list.xlsx');
+  };
 
   return (
     <IonPage>
@@ -178,7 +196,7 @@ const EmployeeList: React.FC = () => {
           <IonList>
             {employees.length > 0 ? (
               employees.map((employee) => (
-                <IonItem key={employee.employee_tag} button onClick={()=> {openModal(employee)}}>
+                <IonItem key={employee.employee_tag} button onClick={() => openModal(employee)}>
                   <IonLabel>
                     <h2 style={{ fontWeight: 'bolder' }}>{employee.username}</h2>
                     <p>Employee Tag: {employee.employee_tag}</p>
@@ -195,7 +213,7 @@ const EmployeeList: React.FC = () => {
           </IonList>
         )}
 
-        <IonModal isOpen={isModalOpen} onDidDismiss={closeModal}>
+       {canEdit && (<IonModal isOpen={isModalOpen} onDidDismiss={closeModal}>
           <IonCard>
             <IonButton fill="clear" onClick={closeModal} className="close-btn" style={{ float: 'right' }}>
               <IonIcon icon={closeCircle} />
@@ -254,9 +272,24 @@ const EmployeeList: React.FC = () => {
               Save Changes
             </IonButton>
           </IonCard>
-        </IonModal>
+        </IonModal>)}
 
         <IonLoading isOpen={loader} message={'Please wait...'} />
+
+        {/* Floating Action Buttons for Export */}        
+        { canExportToExcel && (<IonFab vertical="bottom" horizontal="end" slot="fixed"> 
+       <IonFabButton color="primary">
+            <IonIcon icon={download} />
+          </IonFabButton>
+          <IonFabList side="top">
+            <IonFabButton onClick={exportToExcel}>
+              <IonIcon icon={fileTrayFull} /> {/* Icon for Excel */}
+            </IonFabButton>
+            <IonFabButton onClick={exportToPDF}>
+              <IonIcon icon={documentText} /> {/* Icon for PDF */}
+            </IonFabButton>
+          </IonFabList>
+        </IonFab>)}
       </IonContent>
     </IonPage>
   );

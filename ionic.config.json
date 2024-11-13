@@ -7,7 +7,7 @@
   "proxies": [
     {
       "path": "/api",
-      "proxyUrl": "https://stanificentglobal.com/api"
+      "proxyUrl": "http://localhost/pos-endpoint"
     }
   ]
 }

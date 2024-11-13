@@ -2,16 +2,21 @@ const { app, BrowserWindow } = require('electron');
 const path = require('path');
 
 function createWindow() {
-    const mainWindow = new BrowserWindow({
+    const win = new BrowserWindow({
         width: 800,
         height: 600,
-        webPreferences: {
-            nodeIntegration: true,
-            contextIsolation: false,
+        webPreferences: { // Adjust this if you are not using preload
+            contextIsolation: true,
+            enableRemoteModule: false,
+            nodeIntegration: false,
         },
     });
 
-    mainWindow.loadURL(`file://${path.join(__dirname, 'www/index.html')}`);
+    // Load the index.html file from the dist folder
+    win.loadFile(path.join(__dirname, 'dist', 'index.html')).catch(err => console.error('Failed to load index.html:', err));
+
+    // Optionally open the DevTools
+    win.webContents.openDevTools();
 }
 
 app.whenReady().then(createWindow);

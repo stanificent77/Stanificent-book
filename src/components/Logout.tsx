@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import {  useHistory } from 'react-router-dom';
 import { IonButton, IonLoading } from '@ionic/react';
 import { useSession } from '../hooks/useSession';
 
 const Logout: React.FC = () => {
-  const navigate = useHistory();
+  const history =  useHistory();
   const { logout, isAuthenticated } = useSession();
   const [showLoading, setShowLoading] = useState(false);
 
@@ -15,13 +15,13 @@ const Logout: React.FC = () => {
       isAuthenticated
       logout(); // Perform logout
       setShowLoading(false); // Hide loading
-      navigate('/login'); // Redirect to login
+      history.push('/login'); // Redirect to login
     }, 100); // Simulate some delay for the loading effect
   }else{
     sessionStorage.removeItem("session_token");
     sessionStorage.removeItem("userInfo");
     // Redirect to the login page after logout
-    navigate("/login");
+    history.push("/login");
   }
   };
 

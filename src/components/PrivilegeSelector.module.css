@@ -1,0 +1,20 @@
+.privil{
+    display: flex;
+    justify-content: space-around; 
+    align-items:start;
+}
+
+@media (max-width: 800px){
+    .privil{
+        display: block;
+    }
+}
+
+.field{
+    border: 1px solid black;
+    margin-top: 1rem;
+}
+
+.field h1{
+    text-align: center;
+}

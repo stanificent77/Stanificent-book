@@ -3,12 +3,12 @@ import React, { useState } from "react";
 import style from './Header.module.css';
 import useUserInfo from "../hooks/useUserInfo";
 import SideNav from "./SideNav";
-import { useHistory } from "react-router-dom";
+import {  useHistory } from "react-router-dom";
 
 const Header: React.FC = () => {
   const { userName, employeeTag, userRole } = useUserInfo(); 
   const [menuIsOpen, setMenuIsOpen] = useState(false);
-  const navigate = useHistory(); // Hook for navigating
+  const history =  useHistory(); // Hook for navigating
 
   const handleMenuOpen = () => {
     setMenuIsOpen(true);
@@ -19,7 +19,7 @@ const Header: React.FC = () => {
   };
 
   const handleNavigation = (path: string) => {
-    navigate(path); // Handle navigation
+    history.push(path); // Handle navigation
   };
 
   return (

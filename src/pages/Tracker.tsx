@@ -9,7 +9,7 @@ import BackButton from "../components/BackButton";
 
 const Tracker: React.FC = () => {
     const { userName, employeeTag } = useUserInfo();
-    const endpoint = "https://stanificentglobal.com/api/track.php";
+    const endpoint = "http://localhost/pos-endpoint/track.php";
     const { saveDataOffline } = useOfflineSync();
     const [isOffline, setIsOffline] = useState(false);
     const [popText, setPopText] = useState("");

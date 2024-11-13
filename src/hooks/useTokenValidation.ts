@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import {  useHistory } from 'react-router-dom';
 import { useSession } from './useSession';
 
 const useTokenValidation = (
   token: string,
   setErrors: React.Dispatch<React.SetStateAction<string[]>>
 ) => {
-  const navigate = useHistory();
+  const history =  useHistory();
   const { logout } = useSession();
 
   useEffect(() => {
@@ -14,7 +14,7 @@ const useTokenValidation = (
     const validateToken = async () => {
       if(navigator.onLine){
         try {
-          const response = await fetch('https://stanificentglobal.com/api/tokenValidation.php', {
+          const response = await fetch('http://localhost/pos-endpoint/tokenValidation.php', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -39,7 +39,7 @@ const useTokenValidation = (
             console.log("Invalid token");
             const success = await logout();
             if (success) {
-              navigate('/login'); // Redirect only if logout succeeds
+              history.push('/login'); // Redirect only if logout succeeds
             }
             setErrors(prevErrors => [...prevErrors, "Token is invalid. Redirecting to login."]);
           } else {
@@ -59,7 +59,7 @@ const useTokenValidation = (
     const intervalId = setInterval(validateToken, 10000); // Validate every 10 seconds
 
     return () => clearInterval(intervalId); // Cleanup on unmount
-  }, [token, setErrors, logout, navigate]); // Ensure dependencies are set correctly
+  }, [token, setErrors, logout, history]); // Ensure dependencies are set correctly
 };
 
 export default useTokenValidation;

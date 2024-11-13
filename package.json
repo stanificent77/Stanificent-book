@@ -1,14 +1,16 @@
 {
   "name": "stanificentBookPoint",
   "version": "1.0.0",
-  "main": "dist/index.html",
+  "main": "main.js",
   "scripts": {
-    "start": "nw .",
-    "build": "tsc",
+    "start": "lectron",
+    "build": "ionic build",
+    "electron:start": "concurrently \"ionic serve\" \"wait-on http://localhost:8100 && electron .\"",
+    "electron:build": "ionic build && electron-packager . --platform=win32 --arch=x64 --icon=resources/android/icon.png",
     "electron:serve": "npm run build && electron .",
     "electron:make": "npm run build && electron-forge make",
     "dev": "vite",
-    "build:electron": "electron-builder"
+    "build:electron": "ionic build && electron ."
   },
   "config": {
     "forge": {
@@ -72,17 +74,20 @@
     "@capacitor/cli": "^6.1.2",
     "@capacitor/core": "^6.1.2",
     "@capacitor/electron": "^2.5.0",
-    "@ionic/react": "^8.3.3",
+    "@capacitor/splash-screen": "^6.0.2",
+    "@ionic/react": "^8.4.0",
     "@ionic/react-router": "^8.3.3",
     "electron-builder": "^25.1.8",
     "electron-builder-squirrel-windows": "^25.1.8",
+    "file-saver": "^2.0.5",
     "history": "^5.3.0",
+    "jspdf": "^2.5.2",
+    "jspdf-autotable": "^3.8.4",
     "node-gyp": "^10.2.0",
     "react": "^18.3.1",
     "react-datepicker": "^7.5.0",
     "react-dom": "^18.3.1",
-    "react-router": "5",
-    "react-router-dom": "5"
+    "xlsx": "^0.18.5"
   },
   "resolutions": {
     "glob": "^9.0.0"
